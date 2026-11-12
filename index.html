@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="신고할 쇼츠 7개 · 좋아요·싫어요·댓글 없이 신고만">
+<meta property="og:title" content="쇼츠 추적기">
+<meta property="og:description" content="신고할 쇼츠 7개 · 좋아요·싫어요·댓글 없이 신고만">
+<title>쇼츠 추적기</title>
+<style>
+:root {
+  --paper: #ffffff;
+  --ink: #1d2a3a;
+  --soft: #5a6677;
+  --rule: #e2e6ec;
+  --tint: #f2f5f9;
+  --act: #24477a;
+  --act-ink: #ffffff;
+  --rumor: #8f4b07;
+  --mock: #8a2c5a;
+  --stamp: #b42318;
+  --ok-bg: #edf5ee;
+  --ok-ink: #1f4d2a;
+  --focus: #d9891f;
+  --pic: #dde2e8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #161b22;
+    --ink: #e6eaef;
+    --soft: #a2acb8;
+    --rule: #2b333d;
+    --tint: #1e252e;
+    --act: #9bbcf0;
+    --act-ink: #10192a;
+    --rumor: #f0b25f;
+    --mock: #f0a0c6;
+    --stamp: #ff8f80;
+    --ok-bg: #1c2b21;
+    --ok-ink: #bfe3c6;
+    --focus: #f2b660;
+    --pic: #2b323b;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+h1, h2, h3, p, ol, ul { margin: 0; }
+main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
+
+.mast {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+.mast h1 { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+.asof { font-size: 14px; color: var(--soft); }
+.cycle { margin-top: 6px; font-size: 22px; font-weight: 800; color: var(--act); }
+.lead { margin: 18px 0 20px; font-size: 22px; line-height: 1.45; font-weight: 800; letter-spacing: -0.02em; }
+.lead span { display: inline-block; }
+
+.how { padding: 16px 16px 14px; background: var(--tint); border-radius: 12px; }
+.how h2 { margin-bottom: 8px; font-size: 16px; font-weight: 700; }
+.how ol { display: grid; gap: 6px; padding: 0; list-style: none; }
+.how li { display: grid; grid-template-columns: 1.6em minmax(0, 1fr); }
+.how .n { font-weight: 700; }
+.how small { display: block; font-size: 14px; color: var(--soft); }
+.chip {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--act);
+  color: var(--act-ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+.key {
+  display: inline-block;
+  min-width: 1.6em;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+}
+.dont { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 15px; font-weight: 600; }
+
+.list { margin-top: 8px; padding: 0; list-style: none; }
+.item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.pic { display: block; width: 84px; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 8px; background: var(--pic); }
+.pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pic img.broken { visibility: hidden; }
+.kind { font-size: 14px; font-weight: 700; color: var(--soft); }
+.kind.rumor { color: var(--rumor); }
+.kind.mock { color: var(--mock); }
+.title { margin-top: 2px; font-size: 17px; line-height: 1.45; font-weight: 700; }
+.by { margin-top: 4px; font-size: 14px; color: var(--soft); }
+.by span { display: block; }
+.line { margin-top: 10px; font-size: 15px; }
+.pick { margin-top: 6px; font-size: 14px; color: var(--soft); }
+.pick b { font-weight: 700; color: var(--ink); }
+.acts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin-top: 12px; }
+.go {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: var(--act);
+  color: var(--act-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.note { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--ok-bg); color: var(--ok-ink); font-size: 15px; }
+.note.fail { background: var(--tint); color: var(--ink); }
+.note textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.empty { margin-top: 20px; color: var(--soft); }
+
+.gone-list { margin-top: 40px; }
+.gone-list h2 { font-size: 18px; font-weight: 800; }
+.sub { margin-top: 4px; font-size: 14px; color: var(--soft); }
+.gone .pic img { filter: grayscale(1); opacity: 0.5; }
+.gone .kind, .gone .title { color: var(--soft); }
+.stamp {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 0 8px;
+  border: 2px solid var(--stamp);
+  border-radius: 4px;
+  color: var(--stamp);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.6;
+  transform: rotate(-3deg);
+}
+details { margin-top: 12px; }
+summary { color: var(--act); font-size: 15px; cursor: pointer; }
+pre {
+  margin: 8px 0 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--tint);
+  font-family: inherit;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (min-width: 720px) {
+  main { padding-top: 32px; }
+  .lead { font-size: 26px; }
+  .item { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
+  .pic { width: 96px; }
+}
+</style>
+</head>
+<body>
+<main>
+<header class="mast">
+<h1>쇼츠 추적기</h1>
+<p class="asof">11월 12일 21:12 업데이트</p>
+<p class="cycle">30분마다 업데이트돼요</p>
+</header>
+<p class="lead"><span>신고할 쇼츠 7개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
+
+<section class="how" aria-labelledby="how-title">
+<h2 id="how-title">신고하는 방법</h2>
+<ol>
+<li><span class="n" aria-hidden="true">①</span><span><span class="chip">신고하러 가기</span> 누르기<small>설명이 자동으로 복사돼요</small></span></li>
+<li><span class="n" aria-hidden="true">②</span><span>쇼츠가 열리면 화면을 한 번 눌러 멈추고 <span class="key">⋮<span class="sr">더보기</span></span> → 신고<small>그대로 두면 계속 돌아가면서 조회수가 올라가요</small></span></li>
+<li><span class="n" aria-hidden="true">③</span><span>사유 고르기<small>쇼츠 내용에 맞는 사유를 골라요</small></span></li>
+<li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
+</ol>
+<p class="dont">좋아요·싫어요는 누르지 말고 댓글도 달지 마세요. 반응하면 영상이 더 퍼져요.</p>
+<p class="sub">쇼츠 제보 칸도 만들고 있어요. 곧 여기에서 링크를 보낼 수 있어요.</p>
+</section>
+
+<ul class="list" aria-label="신고할 쇼츠">
+<li class="item" data-id="Q150DmR2XXY">
+<span class="pic"><img src="https://i.ytimg.com/vi/Q150DmR2XXY/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind mock">비하·조롱</p>
+<h3 class="title">Rescene安可舞台被韩国人吐槽了#rescene</h3>
+<p class="by"><span>麻辣音乐榜</span><span>11월 12일에 올림</span></p>
+<p class="line">무대 실력을 깎아내리는 제목과 자막을 붙인 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/Q150DmR2XXY" target="_blank" rel="noopener noreferrer" data-copy="무대 실력을 깎아내리는 제목과 자막을 붙인 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="o9uosX58qGk">
+<span class="pic"><img src="https://i.ytimg.com/vi/o9uosX58qGk/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind mock">비하·조롱</p>
+<h3 class="title">일간 1위를 하지 못하고 있다는 리센느 With</h3>
+<p class="by"><span>돌바라기</span><span>11월 10일에 올림</span></p>
+<p class="line">음원 성적을 깎아내리는 자막으로 비하 반응을 부추기는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/o9uosX58qGk" target="_blank" rel="noopener noreferrer" data-copy="음원 성적을 깎아내리는 자막으로 비하 반응을 부추기는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="qTzwShLRaCw">
+<span class="pic"><img src="https://i.ytimg.com/vi/qTzwShLRaCw/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<h3 class="title">리센느 생라이브 비교 #리센느 #라이브</h3>
+<p class="by"><span>갸루 야호~</span><span>11월 11일에 올림</span></p>
+<p class="line">라이브 실력을 비교해 일부 멤버를 깎아내리는 것으로 보이는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/qTzwShLRaCw" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 비교해 일부 멤버를 깎아내리는 것으로 보이는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="yTSGNK9dzlE">
+<span class="pic"><img src="https://i.ytimg.com/vi/yTSGNK9dzlE/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<h3 class="title">도대체 리센느 앵콜이 왜 난리 났는지 봤더니...#리센느 #rescene</h3>
+<p class="by"><span>세모아</span><span>11월 11일에 올림</span></p>
+<p class="line">특정 멤버의 라이브 실력을 콕 집어 깎아내리는 자막을 붙인 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/yTSGNK9dzlE" target="_blank" rel="noopener noreferrer" data-copy="특정 멤버의 라이브 실력을 콕 집어 깎아내리는 자막을 붙인 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="UaywKJRF_eQ">
+<span class="pic"><img src="https://i.ytimg.com/vi/UaywKJRF_eQ/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind mock">비하·조롱</p>
+<h3 class="title">Is It Really That Bad!? RESCENE’s Live Encore Stage Sparks Heavy Criticism From Netizens</h3>
+<p class="by"><span>Kpop Fact</span><span>11월 11일에 올림</span></p>
+<p class="line">라이브 실력에 대한 비판을 자극적인 제목으로 부풀려 깎아내리는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/UaywKJRF_eQ" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력에 대한 비판을 자극적인 제목으로 부풀려 깎아내리는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="ieK8TfN0Bpk">
+<span class="pic"><img src="https://i.ytimg.com/vi/ieK8TfN0Bpk/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind mock">비하·조롱</p>
+<h3 class="title">리센느 앵콜 논란… 대체 어떻게 불렀길래?</h3>
+<p class="by"><span>홍사부</span><span>11월 11일에 올림</span></p>
+<p class="line">무대에서 부족한 부분만 골라 붙이고 &#x27;논란&#x27;이라는 제목을 달아 실력을 비웃는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/ieK8TfN0Bpk" target="_blank" rel="noopener noreferrer" data-copy="무대에서 부족한 부분만 골라 붙이고 &#x27;논란&#x27;이라는 제목을 달아 실력을 비웃는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+<li class="item" data-id="np0T994Fyu8">
+<span class="pic"><img src="https://i.ytimg.com/vi/np0T994Fyu8/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind mock">비하·조롱</p>
+<h3 class="title">리센느 1위 앵콜라이브 엄청난 반응 모음 #리센느 #RESCENE #With #원이 #앵콜라이브</h3>
+<p class="by"><span>두근두근숏</span><span>11월 12일에 올림</span></p>
+<p class="line">라이브 실력을 깎아내리는 자막과 실수 장면만 골라 붙인 편집으로 놀리는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/np0T994Fyu8" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 깎아내리는 자막과 실수 장면만 골라 붙인 편집으로 놀리는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
+</ul>
+
+
+
+</main>
+<script>
+(function () {
+  "use strict";
+  var FAIL = "자동 복사가 안 됐어요. 아래 글을 길게 눌러 복사해 주세요.";
+
+  // 누른 그 순간에 바로 복사를 시작한다 (기다리거나 링크 이동을 막지 않음 → 휴대폰에서도 쇼츠가 그대로 열림)
+  function copyText(text, done) {
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } catch (e) {
+      done(false);
+    }
+  }
+
+  // 안내 글은 글자로만 넣는다. 복사가 안 되면 직접 복사할 수 있게 글을 상자에 보여 준다.
+  function show(box, ok, message, text) {
+    box.textContent = "";
+    box.className = ok ? "note" : "note fail";
+    var p = document.createElement("p");
+    p.textContent = message;
+    box.appendChild(p);
+    if (!ok) {
+      var area = document.createElement("textarea");
+      area.readOnly = true;
+      area.rows = Math.min(10, text.split("\n").length + 1);
+      area.value = text;
+      area.addEventListener("focus", function () { area.select(); });
+      box.appendChild(area);
+    }
+    box.hidden = false;
+  }
+
+  document.addEventListener("click", function (event) {
+    var el = event.target.closest ? event.target.closest("[data-copy]") : null;
+    var card = el && el.closest(".item");
+    var box = card && card.querySelector(".note");
+    var text = el && el.getAttribute("data-copy");
+    if (!box || !text) return;
+    var reason = el.getAttribute("data-reason");
+    var message = "설명을 복사했어요 · ⋮ → 신고 → " + (reason ? "'" + reason + "'" : "맞는 사유") + " 고르고 붙여넣기";
+    copyText(text, function (ok) { show(box, ok, ok ? message : FAIL, text); });
+  });
+
+  // 썸네일을 못 받으면 (지워진 쇼츠 등) 깨진 그림 대신 빈 회색 칸
+  Array.prototype.forEach.call(document.querySelectorAll(".pic img"), function (img) {
+    function broken() { img.className = "broken"; }
+    if (img.complete && img.naturalWidth === 0) broken();
+    img.addEventListener("error", broken);
+  });
+})();
+</script>
+</body>
+</html>
