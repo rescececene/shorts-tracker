@@ -221,15 +221,39 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
   .item { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
   .pic { width: 96px; }
 }
+.maker { margin-top: 18px; padding: 16px; border: 2px solid var(--act); border-radius: 12px; }
+.maker h2 { font-size: 18px; font-weight: 800; }
+.kinds, .maker-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.kind-btn { min-height: 44px; padding: 0 14px; border: 2px solid var(--act); border-radius: 10px; background: none;
+  color: var(--act); font: inherit; font-weight: 700; cursor: pointer; }
+.kind-btn[aria-pressed="true"] { background: var(--act); color: var(--act-ink); }
+#maker-text { display: block; width: 100%; margin-top: 10px; padding: 10px; border: 1px solid var(--rule, #ccc);
+  border-radius: 10px; font: inherit; font-size: 15px; line-height: 1.6; resize: vertical; box-sizing: border-box; }
+.maker-acts .go { border: 0; font: inherit; cursor: pointer; }
 </style>
 </head>
 <body>
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 12일 21:45 업데이트</p>
+<p class="asof">11월 12일 21:53 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
 </header>
+
+<section class="maker" aria-labelledby="maker-title">
+<h2 id="maker-title">신고 글 만들기</h2>
+<p class="sub">유튜브 규정을 들어 신고 화면 설명 칸에 붙여 넣을 글을 만들어요.</p>
+<div class="kinds" role="group" aria-label="문제 종류">
+<button type="button" class="kind-btn" data-make="mock">비하·조롱</button>
+<button type="button" class="kind-btn" data-make="rumor">루머·허위 사실</button>
+</div>
+<textarea id="maker-text" rows="6" readonly aria-label="만든 신고 글"></textarea>
+<div class="maker-acts">
+<button type="button" class="go" id="maker-copy">복사</button>
+<button type="button" class="kind-btn" id="maker-again">다른 문장으로</button>
+</div>
+<p class="note" id="maker-note" role="status" hidden></p>
+</section>
 <p class="lead"><span>신고할 쇼츠 19개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="how" aria-labelledby="how-title">
@@ -251,7 +275,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">정면돌파 리센느 앵콜 라이브</h3>
 <p class="by"><span>대글이</span><span>11월 12일에 올림</span></p>
 <p class="line">칭찬처럼 꾸몄지만 라이브 실력 논란을 다시 꺼내는 것으로 보이는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/xZVcnWP-Sms" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 꾸몄지만 라이브 실력 논란을 다시 꺼내는 것으로 보이는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/xZVcnWP-Sms" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 꾸몄지만 라이브 실력 논란을 다시 꺼내는 것으로 보이는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -261,7 +285,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 원이 안무 실력 변화</h3>
 <p class="by"><span>다 잇슈(DA ISSUE)</span><span>11월 11일에 올림</span></p>
 <p class="line">칭찬하는 형식이지만 멤버 한 명의 춤 실력을 깎아내리는 자막을 붙인 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/KTykd4CBkNM" target="_blank" rel="noopener noreferrer" data-copy="칭찬하는 형식이지만 멤버 한 명의 춤 실력을 깎아내리는 자막을 붙인 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/KTykd4CBkNM" target="_blank" rel="noopener noreferrer" data-copy="칭찬하는 형식이지만 멤버 한 명의 춤 실력을 깎아내리는 자막을 붙인 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -271,7 +295,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 앵콜라이브, 그전엔 앨범, 인기 많아졌다는게 더욱 느껴진다고</h3>
 <p class="by"><span>돌픽갤러리</span><span>11월 11일에 올림</span></p>
 <p class="line">칭찬하는 척하면서 무대 실수에 대한 비판을 다시 보여 주는지 확인이 필요한 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/9bGhAmItF-Y" target="_blank" rel="noopener noreferrer" data-copy="칭찬하는 척하면서 무대 실수에 대한 비판을 다시 보여 주는지 확인이 필요한 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/9bGhAmItF-Y" target="_blank" rel="noopener noreferrer" data-copy="칭찬하는 척하면서 무대 실수에 대한 비판을 다시 보여 주는지 확인이 필요한 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -281,7 +305,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">하루 만에 달라진 리센느 원이의 안무</h3>
 <p class="by"><span>최애한입</span><span>11월 10일에 올림</span></p>
 <p class="line">멤버 한 명의 무대 실수 장면을 골라 비교해 다시 보여 주는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/0AY6WyhExPw" target="_blank" rel="noopener noreferrer" data-copy="멤버 한 명의 무대 실수 장면을 골라 비교해 다시 보여 주는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/0AY6WyhExPw" target="_blank" rel="noopener noreferrer" data-copy="멤버 한 명의 무대 실수 장면을 골라 비교해 다시 보여 주는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -291,7 +315,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">서사가 클수록 눈높이도 올라간다</h3>
 <p class="by"><span>흰띠</span><span>11월 12일에 올림</span></p>
 <p class="line">축하 소식처럼 꾸몄지만 무대 실력을 깎아내리는 반응을 끌어내는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/_2WgBINmfCI" target="_blank" rel="noopener noreferrer" data-copy="축하 소식처럼 꾸몄지만 무대 실력을 깎아내리는 반응을 끌어내는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/_2WgBINmfCI" target="_blank" rel="noopener noreferrer" data-copy="축하 소식처럼 꾸몄지만 무대 실력을 깎아내리는 반응을 끌어내는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -301,7 +325,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">국민 걸그룹 리센느가 일본에서 안 터진 이유</h3>
 <p class="by"><span>오늘의 썰냥</span><span>11월 7일에 올림</span></p>
 <p class="line">해외 성적을 깎아내리는 것처럼 보이게 대비시킨 썸네일을 단 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/TesGrcnaToU" target="_blank" rel="noopener noreferrer" data-copy="해외 성적을 깎아내리는 것처럼 보이게 대비시킨 썸네일을 단 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/TesGrcnaToU" target="_blank" rel="noopener noreferrer" data-copy="해외 성적을 깎아내리는 것처럼 보이게 대비시킨 썸네일을 단 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -312,7 +336,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">실력 논란 생긴 리센느 원이&amp;메이</h3>
 <p class="by"><span>돌바라기</span><span>11월 11일에 올림</span></p>
 <p class="line">특정 멤버의 라이브 실력을 깎아내리는 자막과 &#x27;논란&#x27; 제목으로 조롱을 부추기는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/0OhSGuG_KV4" target="_blank" rel="noopener noreferrer" data-copy="특정 멤버의 라이브 실력을 깎아내리는 자막과 &#x27;논란&#x27; 제목으로 조롱을 부추기는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/0OhSGuG_KV4" target="_blank" rel="noopener noreferrer" data-copy="특정 멤버의 라이브 실력을 깎아내리는 자막과 &#x27;논란&#x27; 제목으로 조롱을 부추기는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -323,7 +347,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">1위 앵콜 라이브 실력 보여준 리센느</h3>
 <p class="by"><span>다잇엄</span><span>11월 11일에 올림</span></p>
 <p class="line">칭찬처럼 포장해 멤버의 라이브 실력을 비웃는 반응을 부추기는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/D8f84IEcNx4" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 포장해 멤버의 라이브 실력을 비웃는 반응을 부추기는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/D8f84IEcNx4" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 포장해 멤버의 라이브 실력을 비웃는 반응을 부추기는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -334,7 +358,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 1위 앵콜 라이브에 팬들 반응 모음! #리센느 #RESCENE #원이 #미나미 #앵콜라이브</h3>
 <p class="by"><span>두근두근숏</span><span>11월 12일에 올림</span></p>
 <p class="line">1위 축하 영상처럼 꾸며 라이브 실력을 깎아내리는 반응을 부각한 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/QnsUIxwGao4" target="_blank" rel="noopener noreferrer" data-copy="1위 축하 영상처럼 꾸며 라이브 실력을 깎아내리는 반응을 부각한 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/QnsUIxwGao4" target="_blank" rel="noopener noreferrer" data-copy="1위 축하 영상처럼 꾸며 라이브 실력을 깎아내리는 반응을 부각한 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -345,7 +369,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 앵콜 실력 논란 속 반응 좋다는 멤버</h3>
 <p class="by"><span>돌바라기</span><span>11월 12일에 올림</span></p>
 <p class="line">칭찬처럼 꾸며 실력 논란을 다시 꺼내고 멤버끼리 견줘 깎아내리는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/gT8h_doeTPw" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 꾸며 실력 논란을 다시 꺼내고 멤버끼리 견줘 깎아내리는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/gT8h_doeTPw" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 꾸며 실력 논란을 다시 꺼내고 멤버끼리 견줘 깎아내리는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -355,7 +379,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">원이 라이브 논란 이후 다시 좋아진 라이브 #리센느</h3>
 <p class="by"><span>리마인드</span><span>11월 12일에 올림</span></p>
 <p class="line">좋은 소식처럼 포장해 멤버의 실력 논란을 다시 꺼내는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/_DKVQ5Za2n8" target="_blank" rel="noopener noreferrer" data-copy="좋은 소식처럼 포장해 멤버의 실력 논란을 다시 꺼내는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/_DKVQ5Za2n8" target="_blank" rel="noopener noreferrer" data-copy="좋은 소식처럼 포장해 멤버의 실력 논란을 다시 꺼내는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -365,7 +389,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">달라진 원이</h3>
 <p class="by"><span>아이돌스토링</span><span>11월 12일에 올림</span></p>
 <p class="line">칭찬처럼 보이지만 멤버의 실력이 원래 부족했다는 전제를 깔고 다시 꺼내는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/xuIqpdJKuAc" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 보이지만 멤버의 실력이 원래 부족했다는 전제를 깔고 다시 꺼내는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/xuIqpdJKuAc" target="_blank" rel="noopener noreferrer" data-copy="칭찬처럼 보이지만 멤버의 실력이 원래 부족했다는 전제를 깔고 다시 꺼내는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -376,7 +400,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">Rescene安可舞台被韩国人吐槽了#rescene</h3>
 <p class="by"><span>麻辣音乐榜</span><span>11월 12일에 올림</span></p>
 <p class="line">무대 실력을 깎아내리는 제목과 자막을 붙인 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/Q150DmR2XXY" target="_blank" rel="noopener noreferrer" data-copy="무대 실력을 깎아내리는 제목과 자막을 붙인 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/Q150DmR2XXY" target="_blank" rel="noopener noreferrer" data-copy="무대 실력을 깎아내리는 제목과 자막을 붙인 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -387,7 +411,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">일간 1위를 하지 못하고 있다는 리센느 With</h3>
 <p class="by"><span>돌바라기</span><span>11월 10일에 올림</span></p>
 <p class="line">음원 성적을 깎아내리는 자막으로 비하 반응을 부추기는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/o9uosX58qGk" target="_blank" rel="noopener noreferrer" data-copy="음원 성적을 깎아내리는 자막으로 비하 반응을 부추기는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/o9uosX58qGk" target="_blank" rel="noopener noreferrer" data-copy="음원 성적을 깎아내리는 자막으로 비하 반응을 부추기는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -397,7 +421,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 생라이브 비교 #리센느 #라이브</h3>
 <p class="by"><span>갸루 야호~</span><span>11월 11일에 올림</span></p>
 <p class="line">라이브 실력을 비교해 일부 멤버를 깎아내리는 것으로 보이는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/qTzwShLRaCw" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 비교해 일부 멤버를 깎아내리는 것으로 보이는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/qTzwShLRaCw" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 비교해 일부 멤버를 깎아내리는 것으로 보이는 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -407,7 +431,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">도대체 리센느 앵콜이 왜 난리 났는지 봤더니...#리센느 #rescene</h3>
 <p class="by"><span>세모아</span><span>11월 11일에 올림</span></p>
 <p class="line">특정 멤버의 라이브 실력을 콕 집어 깎아내리는 자막을 붙인 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/yTSGNK9dzlE" target="_blank" rel="noopener noreferrer" data-copy="특정 멤버의 라이브 실력을 콕 집어 깎아내리는 자막을 붙인 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/yTSGNK9dzlE" target="_blank" rel="noopener noreferrer" data-copy="특정 멤버의 라이브 실력을 콕 집어 깎아내리는 자막을 붙인 영상이에요" data-reason="" data-kind="">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -418,7 +442,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">Is It Really That Bad!? RESCENE’s Live Encore Stage Sparks Heavy Criticism From Netizens</h3>
 <p class="by"><span>Kpop Fact</span><span>11월 11일에 올림</span></p>
 <p class="line">라이브 실력에 대한 비판을 자극적인 제목으로 부풀려 깎아내리는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/UaywKJRF_eQ" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력에 대한 비판을 자극적인 제목으로 부풀려 깎아내리는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/UaywKJRF_eQ" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력에 대한 비판을 자극적인 제목으로 부풀려 깎아내리는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -429,7 +453,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 앵콜 논란… 대체 어떻게 불렀길래?</h3>
 <p class="by"><span>홍사부</span><span>11월 11일에 올림</span></p>
 <p class="line">무대에서 부족한 부분만 골라 붙이고 &#x27;논란&#x27;이라는 제목을 달아 실력을 비웃는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/ieK8TfN0Bpk" target="_blank" rel="noopener noreferrer" data-copy="무대에서 부족한 부분만 골라 붙이고 &#x27;논란&#x27;이라는 제목을 달아 실력을 비웃는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/ieK8TfN0Bpk" target="_blank" rel="noopener noreferrer" data-copy="무대에서 부족한 부분만 골라 붙이고 &#x27;논란&#x27;이라는 제목을 달아 실력을 비웃는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -440,7 +464,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <h3 class="title">리센느 1위 앵콜라이브 엄청난 반응 모음 #리센느 #RESCENE #With #원이 #앵콜라이브</h3>
 <p class="by"><span>두근두근숏</span><span>11월 12일에 올림</span></p>
 <p class="line">라이브 실력을 깎아내리는 자막과 실수 장면만 골라 붙인 편집으로 놀리는 영상이에요</p>
-<div class="acts"><a class="go" href="https://www.youtube.com/shorts/np0T994Fyu8" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 깎아내리는 자막과 실수 장면만 골라 붙인 편집으로 놀리는 영상이에요" data-reason="">신고하러 가기</a></div>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/np0T994Fyu8" target="_blank" rel="noopener noreferrer" data-copy="라이브 실력을 깎아내리는 자막과 실수 장면만 골라 붙인 편집으로 놀리는 영상이에요" data-reason="" data-kind="비하·조롱">신고하러 가기</a></div>
 <div class="note" role="status" hidden></div>
 </div>
 </li>
@@ -464,6 +488,73 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 
 </main>
 <script>
+(function () {
+  "use strict";
+  // 신고 글 만들기 - 유튜브 커뮤니티 가이드의 실제 정책 이름과 문장만 쓴다 (괴롭힘 및 사이버 폭력에 대한 정책,
+  // 스팸 정책의 '악의적인 클릭베이트'). 누를 때마다 문장을 조금씩 바꿔 똑같은 글이 몰리지 않게 한다.
+  var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+  var HEAD = {
+    mock: ["이 쇼츠는 아이돌 그룹 리센느(RESCENE)와 멤버를 겨냥해 깎아내리는 영상입니다.",
+           "이 쇼츠는 리센느(RESCENE) 멤버를 조롱하고 비하하는 영상입니다.",
+           "리센느(RESCENE) 멤버를 표적으로 삼아 놀리는 쇼츠입니다."],
+    rumor: ["이 쇼츠는 아이돌 그룹 리센느(RESCENE)에 대해 확인되지 않은 소문을 사실처럼 퍼뜨리는 영상입니다.",
+            "리센느(RESCENE)에 대해 근거 없는 이야기를 사실처럼 꾸민 쇼츠입니다."]
+  };
+  var WHAT = {
+    mock: ["실수 장면만 골라 붙이거나 비웃는 자막과 편집으로 실력과 외모를 깎아내리고 있습니다.",
+           "칭찬하는 척하면서 비꼬는 자막으로 멤버를 깎아내리고 있습니다.",
+           "특정 멤버를 콕 집어 웃음거리로 만드는 자막을 붙였습니다."],
+    rumor: ["'논란' · '실체' · '폭로' 같은 제목과 썸네일로 실제 내용과 다른 나쁜 인상을 심고 있습니다.",
+            "사실이 아닌 내용을 자극적인 제목과 썸네일로 퍼뜨리고 있습니다."]
+  };
+  var RULE = {
+    mock: ["YouTube 커뮤니티 가이드의 '괴롭힘 및 사이버 폭력에 대한 정책'은 신원 파악이 가능한 개인을 반복적으로 표적으로 삼아 모욕하거나 괴롭히는 콘텐츠를 허용하지 않습니다.",
+           "YouTube '괴롭힘 및 사이버 폭력에 대한 정책'은 신원 파악이 가능한 개인을 표적으로 삼아 모욕하거나 괴롭히는 콘텐츠를 허용하지 않습니다."],
+    rumor: ["YouTube '스팸 정책'은 악의적으로 오해를 야기하는 제목, 썸네일, 설명으로 사용자를 속이는 '악의적인 클릭베이트'를 허용하지 않습니다."]
+  };
+  var MORE = {
+    mock: ["이런 영상이 퍼지면서 멤버와 팬에게 피해가 이어지고 있습니다.",
+           "멤버 개인을 향한 조롱이 퍼지고 있어 피해가 큽니다."],
+    rumor: ["또한 '괴롭힘 및 사이버 폭력에 대한 정책'은 특정인을 표적으로 삼아 모욕하거나 괴롭히는 콘텐츠를 허용하지 않습니다."]
+  };
+  var END = ["검토 후 삭제 또는 제한 조치를 부탁드립니다.", "확인 후 알맞은 조치를 부탁드립니다."];
+
+  function typeOf(kind) { return kind && kind.indexOf("루머") >= 0 ? "rumor" : (kind === "rumor" ? "rumor" : "mock"); }
+
+  // line: 그 쇼츠의 한 줄 설명(카드) - 있으면 둘째 줄 대신 넣는다
+  window.makeReport = function (kind, line) {
+    var t = typeOf(kind);
+    return [pick(HEAD[t]), line ? line : pick(WHAT[t]), pick(RULE[t]), pick(MORE[t]), pick(END)].join("\n");
+  };
+
+  var box = document.getElementById("maker-text");
+  var note = document.getElementById("maker-note");
+  var current = "mock";
+  function make(kind) {
+    current = kind;
+    box.value = window.makeReport(kind, "");
+    Array.prototype.forEach.call(document.querySelectorAll("[data-make]"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-make") === kind ? "true" : "false");
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-make]"), function (b) {
+    b.addEventListener("click", function () { make(b.getAttribute("data-make")); });
+  });
+  document.getElementById("maker-again").addEventListener("click", function () { make(current); });
+  document.getElementById("maker-copy").addEventListener("click", function () {
+    var text = box.value;
+    function done(ok) {
+      note.textContent = ok ? "복사했어요 · 신고 화면 설명 칸에 붙여 넣어요" : "자동 복사가 안 됐어요. 글을 길게 눌러 복사해 주세요.";
+      note.hidden = false;
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } catch (e) {
+      done(false);
+    }
+  });
+  make("mock");
+})();
 (function () {
   "use strict";
   var FAIL = "자동 복사가 안 됐어요. 아래 글을 길게 눌러 복사해 주세요.";
@@ -499,7 +590,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
     var el = event.target.closest ? event.target.closest("[data-copy]") : null;
     var card = el && el.closest(".item");
     var box = card && card.querySelector(".note");
-    var text = el && el.getAttribute("data-copy");
+    var line = el && el.getAttribute("data-copy");
+    var text = line && window.makeReport ? window.makeReport(el.getAttribute("data-kind"), line) : line;
     if (!box || !text) return;
     var reason = el.getAttribute("data-reason");
     var message = "설명을 복사했어요 · ⋮ → 신고 → " + (reason ? "'" + reason + "'" : "맞는 사유") + " 고르고 붙여넣기";
