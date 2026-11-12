@@ -149,6 +149,37 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 }
 .empty { margin-top: 20px; color: var(--soft); }
 
+.tip { margin-top: 40px; padding: 16px; border: 1px solid var(--rule); border-radius: 12px; }
+.tip h2 { font-size: 18px; font-weight: 800; }
+.tip form { display: grid; gap: 6px; margin-top: 12px; }
+.tip label { margin-top: 6px; font-size: 14px; font-weight: 700; }
+.tip input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+.tip button {
+  justify-self: start;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--act);
+  color: var(--act-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tip button:disabled { opacity: 0.6; cursor: default; }
+.tip .note { margin-top: 12px; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
 .gone-list { margin-top: 40px; }
 .gone-list h2 { font-size: 18px; font-weight: 800; }
 .sub { margin-top: 4px; font-size: 14px; color: var(--soft); }
@@ -178,7 +209,7 @@ pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-visible {
+a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-visible, input:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
@@ -196,7 +227,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 12일 21:31 업데이트</p>
+<p class="asof">11월 12일 21:39 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
 </header>
 <p class="lead"><span>신고할 쇼츠 14개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
@@ -210,7 +241,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
 </ol>
 <p class="dont">좋아요·싫어요는 누르지 말고 댓글도 달지 마세요. 반응하면 영상이 더 퍼져요.</p>
-<p class="sub">쇼츠 제보 칸도 만들고 있어요. 곧 여기에서 링크를 보낼 수 있어요.</p>
+<p class="sub">여기 없는 쇼츠를 알면 아래 ‘쇼츠 제보하기’에서 링크를 보내 주세요.</p>
 </section>
 
 <ul class="list" aria-label="신고할 쇼츠">
@@ -365,6 +396,20 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 </li>
 </ul>
 
+<section class="tip" aria-labelledby="tip-title">
+<h2 id="tip-title">쇼츠 제보하기</h2>
+<p class="sub">신고할 만한 쇼츠를 보면 링크를 보내 주세요. 확인해서 여기에 올려요.</p>
+<form id="tip-form" method="post" action="https://shorts-tracker.pages.dev/api/tip">
+<label for="tip-url">쇼츠 링크</label>
+<input id="tip-url" name="url" type="text" inputmode="url" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300" placeholder="https://youtube.com/shorts/…">
+<label for="tip-note">한마디 (안 써도 돼요)</label>
+<input id="tip-note" name="note" type="text" maxlength="100" autocomplete="off" placeholder="어떤 점이 문제인지 짧게">
+<div class="hp" aria-hidden="true"><label for="tip-homepage">비워 두세요</label><input id="tip-homepage" name="homepage" type="text" tabindex="-1" autocomplete="off"></div>
+<button type="submit">보내기</button>
+</form>
+<div class="note" id="tip-done" role="status" hidden></div>
+</section>
+
 
 
 </main>
@@ -410,6 +455,40 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
     var message = "설명을 복사했어요 · ⋮ → 신고 → " + (reason ? "'" + reason + "'" : "맞는 사유") + " 고르고 붙여넣기";
     copyText(text, function (ok) { show(box, ok, ok ? message : FAIL, text); });
   });
+
+  // 제보 보내기: 같은 페이지가 다른 주소(사본)에서도 열리므로 받는 곳은 늘 이 주소 하나. 답은 읽지 않는다 (no-cors ·
+  // form 꼴 - 미리 묻는 요청 없이 감) - 보내지면 어떤 경우든 같은 말만 (한도 · 같은 링크 · 숨은 칸을 드러내지 않게).
+  // 인터넷이 끊겨 보내지도 못했을 때만 다시 보내 달라고 한다.
+  var TIP_URL = "https://shorts-tracker.pages.dev/api/tip";
+  var tipForm = document.getElementById("tip-form");
+  var tipDone = document.getElementById("tip-done");
+  if (tipForm && tipDone && window.fetch && window.URLSearchParams) {
+    tipForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var field = function (name) { var el = tipForm.elements.namedItem(name); return el ? el.value : ""; };
+      var button = tipForm.querySelector("button");
+      var body = new URLSearchParams();
+      body.append("url", field("url"));
+      body.append("note", field("note"));
+      body.append("homepage", field("homepage"));
+      button.disabled = true;
+      tipDone.hidden = true;
+      fetch(TIP_URL, { method: "POST", mode: "no-cors", body: body, credentials: "omit", cache: "no-store",
+                       referrerPolicy: "no-referrer" })
+        .then(function () {
+          tipForm.reset();
+          tipDone.className = "note";
+          tipDone.textContent = "보내 주셔서 고마워요";
+        }, function () {
+          tipDone.className = "note fail";
+          tipDone.textContent = "보내지 못했어요. 인터넷 연결을 확인하고 다시 보내 주세요.";
+        })
+        .then(function () {
+          tipDone.hidden = false;
+          button.disabled = false;
+        });
+    });
+  }
 
   // 썸네일을 못 받으면 (지워진 쇼츠 등) 깨진 그림 대신 빈 회색 칸
   Array.prototype.forEach.call(document.querySelectorAll(".pic img"), function (img) {
