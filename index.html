@@ -149,7 +149,7 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 }
 .empty { margin-top: 20px; color: var(--soft); }
 
-.tip { margin-top: 40px; padding: 16px; border: 1px solid var(--rule); border-radius: 12px; }
+.tip { margin-top: 18px; padding: 16px; border: 1px solid var(--rule); border-radius: 12px; }
 .tip h2 { font-size: 18px; font-weight: 800; }
 .tip form { display: grid; gap: 6px; margin-top: 12px; }
 .tip label { margin-top: 6px; font-size: 14px; font-weight: 700; }
@@ -236,9 +236,23 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 12일 22:50 업데이트</p>
+<p class="asof">11월 12일 22:57 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
 </header>
+
+<section class="tip" aria-labelledby="tip-title">
+<h2 id="tip-title">쇼츠 제보하기</h2>
+<p class="sub">신고할 만한 쇼츠를 보면 링크를 보내 주세요. 확인해서 여기에 올려요.</p>
+<form id="tip-form" method="post" action="https://shorts-tracker.pages.dev/api/tip">
+<label for="tip-url">쇼츠 링크</label>
+<input id="tip-url" name="url" type="text" inputmode="url" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300" placeholder="https://youtube.com/shorts/…">
+<label for="tip-note">한마디 (안 써도 돼요)</label>
+<input id="tip-note" name="note" type="text" maxlength="100" autocomplete="off" placeholder="어떤 점이 문제인지 짧게">
+<div class="hp" aria-hidden="true"><label for="tip-homepage">비워 두세요</label><input id="tip-homepage" name="homepage" type="text" tabindex="-1" autocomplete="off"></div>
+<button type="submit">보내기</button>
+</form>
+<div class="note" id="tip-done" role="status" hidden></div>
+</section>
 
 <section class="maker" aria-labelledby="maker-title">
 <h2 id="maker-title">신고 글 만들기</h2>
@@ -265,7 +279,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
 </ol>
 <p class="dont">좋아요·싫어요는 누르지 말고 댓글도 달지 마세요. 반응하면 영상이 더 퍼져요.</p>
-<p class="sub">여기 없는 쇼츠를 알면 아래 ‘쇼츠 제보하기’에서 링크를 보내 주세요.</p>
+<p class="sub">여기 없는 쇼츠를 알면 맨 위 ‘쇼츠 제보하기’에서 링크를 보내 주세요.</p>
 </section>
 
 <ul class="list" aria-label="신고할 쇼츠">
@@ -551,20 +565,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 </div>
 </li>
 </ul>
-
-<section class="tip" aria-labelledby="tip-title">
-<h2 id="tip-title">쇼츠 제보하기</h2>
-<p class="sub">신고할 만한 쇼츠를 보면 링크를 보내 주세요. 확인해서 여기에 올려요.</p>
-<form id="tip-form" method="post" action="https://shorts-tracker.pages.dev/api/tip">
-<label for="tip-url">쇼츠 링크</label>
-<input id="tip-url" name="url" type="text" inputmode="url" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="300" placeholder="https://youtube.com/shorts/…">
-<label for="tip-note">한마디 (안 써도 돼요)</label>
-<input id="tip-note" name="note" type="text" maxlength="100" autocomplete="off" placeholder="어떤 점이 문제인지 짧게">
-<div class="hp" aria-hidden="true"><label for="tip-homepage">비워 두세요</label><input id="tip-homepage" name="homepage" type="text" tabindex="-1" autocomplete="off"></div>
-<button type="submit">보내기</button>
-</form>
-<div class="note" id="tip-done" role="status" hidden></div>
-</section>
 
 
 
