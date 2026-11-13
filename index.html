@@ -29,6 +29,8 @@
   --act-ink: #ffffff;
   --rumor: #8f4b07;
   --mock: #8a2c5a;
+  --rumor-bg: #fbefe2;
+  --mock-bg: #f8e7ef;
   --stamp: #b42318;
   --ok-bg: #edf5ee;
   --ok-ink: #1f4d2a;
@@ -46,6 +48,8 @@
     --act-ink: #10192a;
     --rumor: #f0b25f;
     --mock: #f0a0c6;
+    --rumor-bg: #3a2a17;
+    --mock-bg: #3a1f2c;
     --stamp: #ff8f80;
     --ok-bg: #1c2b21;
     --ok-ink: #bfe3c6;
@@ -67,18 +71,11 @@ body {
 h1, h2, h3, p, ol, ul { margin: 0; }
 main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 
-.mast {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--ink);
-}
-.mast h1 { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
-.asof { font-size: 14px; color: var(--soft); }
-.cycle { margin-top: 6px; font-size: 22px; font-weight: 800; color: var(--act); }
-.lead { margin: 18px 0 20px; font-size: 22px; line-height: 1.45; font-weight: 800; letter-spacing: -0.02em; }
+.mast { padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+.mast h1 { font-size: 28px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
+.cycle { margin-top: 4px; font-size: 20px; font-weight: 800; color: var(--act); }
+.asof { margin-top: 2px; font-size: 14px; color: var(--soft); }
+.lead { margin-top: 16px; font-size: 22px; line-height: 1.45; font-weight: 800; letter-spacing: -0.02em; }
 .lead span { display: inline-block; }
 
 .how { padding: 16px 16px 14px; background: var(--tint); border-radius: 12px; }
@@ -120,9 +117,18 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 .pic { display: block; width: 84px; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 8px; background: var(--pic); }
 .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .pic img.broken { visibility: hidden; }
-.kind { font-size: 14px; font-weight: 700; color: var(--soft); }
-.kind.rumor { color: var(--rumor); }
-.kind.mock { color: var(--mock); }
+.kind {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--soft);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.75;
+}
+.kind.rumor { background: var(--rumor-bg); color: var(--rumor); }
+.kind.mock { background: var(--mock-bg); color: var(--mock); }
 .title { margin-top: 2px; font-size: 17px; line-height: 1.45; font-weight: 700; }
 .by { margin-top: 4px; font-size: 14px; color: var(--soft); }
 .by span { display: block; }
@@ -254,7 +260,56 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.mine-note, .open-line { margin-top: 14px; font-size: 15px; color: var(--soft); }
+.open-line { margin-top: 14px; font-size: 15px; color: var(--soft); }
+.acts .go { flex: 1; justify-content: center; }
+.tip form { grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; }
+.tip form label, .tip form #tip-note { grid-column: 1 / -1; }
+.tip form button { grid-row: 2; grid-column: 2; justify-self: stretch; margin-top: 0; }
+.top-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.top-acts .go { flex: 1 1 auto; justify-content: center; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+.top-acts .go.ghost { border: 2px solid var(--act); }
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+  margin-top: 24px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--tint);
+}
+.tab {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 8px;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--soft);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tab b { margin-left: 4px; font-weight: 800; }
+.tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); }
+.tab[aria-selected="true"] b { color: var(--act); }
+.done-empty { margin-top: 18px; color: var(--soft); }
+.bundle-upto { margin-top: 10px; }
+.upto-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.upto-row input {
+  width: 5em;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+.upto-row .go { border: 0; font: inherit; cursor: pointer; }
 .all-done { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--ok-bg); color: var(--ok-ink); font-weight: 700; }
 .next-bar {
   position: fixed;
@@ -305,9 +360,10 @@ body.has-next main { padding-bottom: 104px; }
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 13일 20:03 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
+<p class="asof">11월 13일 20:25 업데이트</p>
 </header>
+<p class="lead"><span>신고할 쇼츠 <span id="left">107</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="tip" aria-labelledby="tip-title">
 <h2 id="tip-title">쇼츠 제보하기</h2>
@@ -337,7 +393,6 @@ body.has-next main { padding-bottom: 104px; }
 </div>
 <p class="note" id="maker-note" role="status" hidden></p>
 </section>
-<p class="lead"><span>신고할 쇼츠 <span id="left">107</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="how" aria-labelledby="how-title">
 <h2 id="how-title">신고하는 방법</h2>
@@ -348,7 +403,7 @@ body.has-next main { padding-bottom: 104px; }
 <li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
 </ol>
 <p class="dont">좋아요·싫어요는 누르지 말고 댓글도 달지 마세요. 반응하면 영상이 더 퍼져요.</p>
-<p class="sub">신고한 쇼츠는 이 브라우저가 기억해서, 다음에 오면 목록에서 빠져요.</p>
+<p class="sub">신고한 쇼츠는 이 브라우저가 기억해서 ‘신고 완료’ 탭으로 옮겨 둬요.</p>
 <p class="sub">여기 없는 쇼츠를 알면 맨 위 ‘쇼츠 제보하기’에서 링크를 보내 주세요.</p>
 </section>
 
@@ -1810,34 +1865,70 @@ body.has-next main { padding-bottom: 104px; }
     if (text) e.textContent = text;
     return e;
   }
-  function button(text, onClick) {
-    var b = make("button", "undo", text);
+  function button(text, onClick, cls) {
+    var b = make("button", cls || "undo", text);
     b.type = "button";
     b.addEventListener("click", onClick);
     return b;
   }
 
-  // 목록 위: 여는 곳 · 목록 아래: 숨긴 수 · 다 했어요 · 화면 아래: 다음 쇼츠
+  // 탭 (사용자 11-13 "신고한 건 탭을 만들어서 신고 완료 탭으로"): 신고할 쇼츠 / 신고 완료 / 삭제됨. 방금 신고한 것(fresh)은
+  // 탭을 바꿀 때까지 그 자리에 흐리게 둔다 (돌아왔을 때 화면이 들썩이지 않게).
+  // 목록 위: 탭 · 줄줄이 열기 · 여는 곳 / 목록 아래: 다 했어요 · 빈 신고 완료 / 화면 아래: 다음 쇼츠 / 맨 위: 바로 가기
   var list = cards[0].parentNode;
+  var goneSection = document.querySelector(".gone-list");
+  var goneCount = document.querySelectorAll(".item.gone").length;
+  var tab = "todo", fresh = {};
+  var tabs = make("div", "tabs");
+  tabs.setAttribute("role", "tablist");
+  tabs.setAttribute("aria-label", "쇼츠 목록");
+  var tabButtons = {};
+  [["todo", "신고할 쇼츠"], ["done", "신고 완료"], ["gone", "삭제됨"]].forEach(function (t) {
+    if (t[0] === "gone" && !goneSection) return;
+    var b = button(t[1], function () { showTab(t[0]); }, "tab");
+    b.setAttribute("role", "tab");
+    b.setAttribute("data-tab", t[0]);
+    b.appendChild(make("b"));
+    tabButtons[t[0]] = b;
+    tabs.appendChild(b);
+  });
   var openText = make("span");
   var openLine = make("p", "open-line");
   openLine.appendChild(openText);
   openLine.appendChild(button("바꾸기", function () { how = null; save(OPEN_KEY, null); applyHow(); }));
-  var mineText = make("span");
-  var mineNote = make("p", "mine-note");
-  mineNote.appendChild(mineText);
-  mineNote.appendChild(button("다시 보기", function () {
-    cards.forEach(function (card) { card.hidden = false; });
-    refresh();
-  }));
   var allDone = make("p", "all-done", "다 신고했어요. 새로 올라오면 여기에 떠요.");
+  var doneEmpty = make("p", "done-empty", "아직 신고한 쇼츠가 없어요. 신고하면 여기에 모여요.");
+  list.parentNode.insertBefore(tabs, list);
   list.parentNode.insertBefore(openLine, list);
-  list.parentNode.insertBefore(mineNote, list.nextSibling);
-  list.parentNode.insertBefore(allDone, mineNote.nextSibling);
+  list.parentNode.insertBefore(allDone, list.nextSibling);
+  list.parentNode.insertBefore(doneEmpty, allDone.nextSibling);
+  function jumpToList() {
+    if (tabs.scrollIntoView) tabs.scrollIntoView({ block: "start" });
+  }
+  var lead = document.querySelector(".lead");
+  if (lead) {                                      // 맨 위 핵심 한 줄 밑: 바로 목록으로 · 삭제된 쇼츠 보기
+    var topActs = make("div", "top-acts");
+    topActs.appendChild(button("▶ 바로 신고하기", function () { showTab("todo"); jumpToList(); }, "go"));
+    if (goneSection) {
+      topActs.appendChild(button("삭제된 쇼츠 " + goneCount + "개 →", function () { showTab("gone"); jumpToList(); }, "go ghost"));
+    }
+    lead.parentNode.insertBefore(topActs, lead.nextSibling);
+  }
+  function showTab(name) {
+    tab = name;
+    fresh = {};
+    Object.keys(tabButtons).forEach(function (k) {
+      tabButtons[k].setAttribute("aria-selected", k === name ? "true" : "false");
+    });
+    refresh();
+  }
 
   // 줄줄이 말아 열기 (사용자 11-13 "쇼츠 연달아 말아주는 건 왜 없어"): 안 한 쇼츠를 위에서부터 유튜브 이어 보기 주소
   // 하나로 묶는다 (youtube.com/watch_videos - 유튜브가 이름 없는 재생목록을 만들어 줌, 한 번에 BUNDLE_MAX 개). 앱으로
   // 넘기는 주소는 쓰지 않는다 (앱이 이 주소를 받는지 모름) - 카톡 안이면 카톡 밖으로만. 연 뒤 '다 했어요' 면 모두 신고한 것.
+  // 꺼 둠 (11-13 사용자 폰: 앱에서 '비공개' 로 아예 안 열림 - 쇼츠는 API 로 다 공개, 브라우저가 만든 이어 보기 목록을 앱이
+  // 못 여는 것으로 봄). <html data-bundle="on"> 일 때만 보인다 - 앱에서 열리는 다른 길(채널 재생목록 등)이 생기면 다시 켠다.
+  var BUNDLE_ON = document.documentElement.getAttribute("data-bundle") === "on";
   var BUNDLE_KEY = "shorts-tracker:bundle", BUNDLE_MAX = 50;
   var asked = [];
   try {
@@ -1854,34 +1945,69 @@ body.has-next main { padding-bottom: 104px; }
   var bundleNote = make("p", "sub");
   var askLine = make("p", "ask");
   askLine.appendChild(make("span", "", "유튜브에서 다 신고했나요?"));
-  askLine.appendChild(button("다 했어요", function () { finishBundle(true); }));
-  askLine.appendChild(button("아직이요", function () { finishBundle(false); }));
+  askLine.appendChild(button("다 했어요", function () { finishBundle(asked.length); }));
+  askLine.appendChild(button("중간까지 했어요", function () {
+    upto.hidden = false;
+    if (uptoInput.focus) uptoInput.focus();
+  }));
+  askLine.appendChild(button("아직이요", function () { finishBundle(0); }));
+  // 중간에 멈췄으면 몇 번째까지 했는지 (사용자 11-13) - 유튜브 이어 보기 목록에 '12/50' 처럼 나온다. 앞에서부터 그만큼만.
+  var upto = make("div", "bundle-upto");
+  upto.appendChild(make("p", "", "몇 번째까지 했나요?"));
+  upto.appendChild(make("p", "sub", "유튜브 이어 보기 목록에 ‘12/50’처럼 몇 번째인지 나와요."));
+  var uptoRow = make("p", "upto-row");
+  var uptoInput = make("input");
+  uptoInput.type = "text";
+  uptoInput.setAttribute("inputmode", "numeric");
+  uptoInput.setAttribute("autocomplete", "off");
+  uptoInput.setAttribute("aria-label", "몇 번째까지 했는지");
+  uptoRow.appendChild(uptoInput);
+  uptoRow.appendChild(make("span", "", "번째까지"));
+  uptoRow.appendChild(button("저장", saveUpto, "go"));
+  upto.appendChild(uptoRow);
+  var uptoNote = make("p", "sub");
+  upto.appendChild(uptoNote);
+  upto.hidden = true;
+  uptoInput.addEventListener("keydown", function (event) { if (event.key === "Enter") saveUpto(); });
+  function saveUpto() {
+    var m = /\d+/.exec(uptoInput.value || "");
+    var n = m ? parseInt(m[0], 10) : 0;
+    if (!(n >= 1 && n <= asked.length)) {
+      uptoNote.textContent = "1부터 " + asked.length + "까지 넣어 주세요";
+      return;
+    }
+    finishBundle(n);
+  }
   bundleAsk.appendChild(bundleNote);
   bundleAsk.appendChild(askLine);
+  bundleAsk.appendChild(upto);
   bundle.appendChild(bundleAsk);
   list.parentNode.insertBefore(bundle, openLine);
   function bundleHref(ids) {
     var u = "https://www.youtube.com/watch_videos?video_ids=" + ids.join(",");
     return kakao ? "kakaotalk://web/openExternal?url=" + encodeURIComponent(u) : u;
   }
-  function finishBundle(all) {
-    if (all) {
-      asked.forEach(function (id) {
-        var card = cards.filter(function (c) { return idOf(c) === id; })[0];
-        if (card) {
-          done[id] = Date.now();
-          paint(card, true);
-        }
-      });
-      saveDone();
-    }
+  function finishBundle(n) {                     // 묶음의 앞에서부터 n 개를 신고한 것으로 (0 이면 아무것도)
+    asked.slice(0, n).forEach(function (id) {
+      var card = cards.filter(function (c) { return idOf(c) === id; })[0];
+      if (card) {
+        done[id] = Date.now();
+        fresh[id] = true;
+        paint(card, true);
+      }
+    });
+    if (n) saveDone();
     asked = [];
     save(BUNDLE_KEY, null);
+    upto.hidden = true;
+    uptoInput.value = "";
+    uptoNote.textContent = "";
     refresh();
   }
   bundleGo.addEventListener("click", function () {   // 주소는 그대로 두고 (누른 링크가 열려야 함) 물음만 띄운다
     asked = (bundleGo.getAttribute("data-ids") || "").split(",").filter(Boolean);
     save(BUNDLE_KEY, JSON.stringify(asked));
+    upto.hidden = true;
     bundleNote.textContent = "";
     try {
       navigator.clipboard.writeText(window.makeReport ? window.makeReport("mock", "") : "").then(function () {
@@ -1918,15 +2044,27 @@ body.has-next main { padding-bottom: 104px; }
     }
     if (row) row.hidden = !on;
   }
+  function count(name, n) {
+    if (tabButtons[name]) tabButtons[name].querySelector("b").textContent = String(n);
+  }
   function refresh() {
     var left = cards.filter(function (card) { return !done[idOf(card)]; });
-    var hiddenCount = cards.filter(function (card) { return card.hidden; }).length;
+    var todo = tab === "todo";
+    cards.forEach(function (card) {
+      var id = idOf(card), isDone = Boolean(done[id]);
+      card.hidden = todo ? (isDone && !fresh[id]) : (tab === "done" ? !isDone : true);
+    });
     if (leftCount) leftCount.textContent = String(left.length);
-    mineText.textContent = "내가 신고한 쇼츠 " + hiddenCount + "개는 숨겼어요 · ";
-    mineNote.hidden = hiddenCount === 0;
-    allDone.hidden = left.length > 0;
+    count("todo", left.length);
+    count("done", cards.length - left.length);
+    count("gone", goneCount);
+    list.hidden = tab === "gone";
+    if (goneSection) goneSection.hidden = tab !== "gone";
+    doneEmpty.hidden = !(tab === "done" && left.length === cards.length);
+    allDone.hidden = !(todo && left.length === 0);
+    openLine.hidden = !(todo && os && how);
     var pack = left.slice(0, BUNDLE_MAX).map(idOf);
-    bundle.hidden = !pack.length && !asked.length;
+    bundle.hidden = !BUNDLE_ON || !todo || (!pack.length && !asked.length);
     bundleAsk.hidden = !asked.length;
     bundleGo.hidden = !pack.length;
     if (pack.length) {
@@ -1934,7 +2072,7 @@ body.has-next main { padding-bottom: 104px; }
       bundleGo.setAttribute("data-ids", pack.join(","));
       bundleGo.textContent = "▶ 쇼츠 " + pack.length + "개 이어서 열기";
     }
-    var target = started ? left[0] : null;
+    var target = todo && started ? left[0] : null;
     bar.hidden = !target;
     document.body.classList.toggle("has-next", Boolean(target));
     if (target) {
@@ -1949,12 +2087,12 @@ body.has-next main { padding-bottom: 104px; }
     cards.forEach(function (card) {
       point(linkOf(card), how === "app" ? appUrl(home(card)) : (how === "web" ? webUrl(home(card)) : home(card)));
     });
-    openLine.hidden = !(os && how);
     openText.textContent = "신고 링크를 여는 곳: " + (how === "app" ? "유튜브 앱" : "브라우저") + " · ";
     refresh();
   }
   function opened(card) {
     started = true;
+    fresh[idOf(card)] = true;
     done[idOf(card)] = Date.now();
     saveDone();
     paint(card, true);
@@ -2026,13 +2164,9 @@ body.has-next main { padding-bottom: 104px; }
     opened(card);
   });
 
-  cards.forEach(function (card) {
-    if (done[idOf(card)]) {
-      paint(card, true);
-      card.hidden = true;
-    }
-  });
+  cards.forEach(function (card) { if (done[idOf(card)]) paint(card, true); });
   applyHow();
+  showTab("todo");
 })();
 </script>
 </body>
