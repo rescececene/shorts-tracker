@@ -31,6 +31,7 @@
   --mock: #8a2c5a;
   --rumor-bg: #fbefe2;
   --mock-bg: #f8e7ef;
+  --tip-bg: #eef3fa;
   --stamp: #b42318;
   --ok-bg: #edf5ee;
   --ok-ink: #1f4d2a;
@@ -50,6 +51,7 @@
     --mock: #f0a0c6;
     --rumor-bg: #3a2a17;
     --mock-bg: #3a1f2c;
+    --tip-bg: #18243a;
     --stamp: #ff8f80;
     --ok-bg: #1c2b21;
     --ok-ink: #bfe3c6;
@@ -167,8 +169,13 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 }
 .empty { margin-top: 20px; color: var(--soft); }
 
-.tip { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); }
-.tip h2 { font-size: 18px; font-weight: 800; }
+/* 쇼츠 제보하기는 한눈에 띄게 (사용자 11-13 '강조해줘 · 한눈에 띄게') - 남색으로 꽉 채운 칸, 흰 글씨, 흰 [보내기] */
+.tip { margin-top: 24px; padding: 20px 16px; border-radius: 16px; background: var(--act); color: var(--act-ink); }
+.tip h2 { font-size: 22px; font-weight: 800; color: var(--act-ink); }
+.tip .sub { color: var(--act-ink); opacity: 0.88; }
+.tip form label { color: var(--act-ink); }
+.tip form input { border-color: transparent; }
+.tip form button { background: var(--paper); color: var(--act); }
 .tip form { display: grid; gap: 6px; margin-top: 12px; }
 .tip label { margin-top: 6px; font-size: 14px; font-weight: 700; }
 .tip input {
@@ -393,7 +400,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 22:17 업데이트</p>
+<p class="asof">11월 13일 22:24 업데이트</p>
 </header>
 <p class="lead"><span class="big">신고할 쇼츠 <span id="left">106</span>개<span class="sep"> ·</span></span> <span class="small">좋아요·싫어요·댓글 없이 신고만</span></p>
 
