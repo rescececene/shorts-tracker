@@ -248,21 +248,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
   .item { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
   .pic { width: 96px; }
 }
-.maker { margin-top: 20px; padding-top: 4px; border-top: 1px solid var(--rule); }
-.maker details { margin-top: 0; }
-.maker summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 52px;
-  color: var(--ink);
-  list-style: none;
-}
-.maker summary::-webkit-details-marker { display: none; }
-.maker summary h2 { font-size: 18px; font-weight: 800; }
-.maker summary::after { content: "펼치기"; font-size: 14px; font-weight: 700; color: var(--act); }
-.maker details[open] summary::after { content: "접기"; }
+.maker { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); }   /* 늘 펼쳐 둠 (사용자 11-13) */
+.maker h2 { font-size: 18px; font-weight: 800; }
 .kinds, .maker-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .kind-btn { min-height: 44px; padding: 0 14px; border: 2px solid var(--act); border-radius: 10px; background: none;
   color: var(--act); font: inherit; font-weight: 700; cursor: pointer; }
@@ -403,7 +390,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 23:04 업데이트</p>
+<p class="asof">11월 13일 23:11 업데이트</p>
 </header>
 <p class="lead"><span class="big">신고할 쇼츠 <span id="left">107</span>개<span class="sep"> ·</span></span> <span class="small">좋아요·싫어요·댓글 없이 신고만</span></p>
 
@@ -422,9 +409,8 @@ body.has-next main { padding-bottom: 104px; }
 </section>
 
 <section class="maker" aria-labelledby="maker-title">
-<details>
-<summary><h2 id="maker-title">신고 글 만들기</h2></summary>
-<p class="sub">유튜브 규정을 들어 신고 화면 설명 칸에 붙여 넣을 글을 만들어요. [신고하러 가기]를 누르면 글이 저절로 복사돼서, 평소엔 안 열어도 돼요.</p>
+<h2 id="maker-title">신고 글 만들기</h2>
+<p class="sub">유튜브 규정을 들어 신고 화면 설명 칸에 붙여 넣을 글을 만들어요.</p>
 <div class="kinds" role="group" aria-label="문제 종류">
 <button type="button" class="kind-btn" data-make="mock">비하·조롱</button>
 <button type="button" class="kind-btn" data-make="rumor">루머·허위 사실</button>
@@ -435,7 +421,6 @@ body.has-next main { padding-bottom: 104px; }
 <button type="button" class="kind-btn" id="maker-again">다른 문장으로</button>
 </div>
 <p class="note" id="maker-note" role="status" hidden></p>
-</details>
 </section>
 
 <section class="how" aria-labelledby="how-title">
