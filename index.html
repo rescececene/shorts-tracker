@@ -361,7 +361,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 20:25 업데이트</p>
+<p class="asof">11월 13일 21:02 업데이트</p>
 </header>
 <p class="lead"><span>신고할 쇼츠 <span id="left">107</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
@@ -1928,7 +1928,10 @@ body.has-next main { padding-bottom: 104px; }
   // 넘기는 주소는 쓰지 않는다 (앱이 이 주소를 받는지 모름) - 카톡 안이면 카톡 밖으로만. 연 뒤 '다 했어요' 면 모두 신고한 것.
   // 꺼 둠 (11-13 사용자 폰: 앱에서 '비공개' 로 아예 안 열림 - 쇼츠는 API 로 다 공개, 브라우저가 만든 이어 보기 목록을 앱이
   // 못 여는 것으로 봄). <html data-bundle="on"> 일 때만 보인다 - 앱에서 열리는 다른 길(채널 재생목록 등)이 생기면 다시 켠다.
-  var BUNDLE_ON = document.documentElement.getAttribute("data-bundle") === "on";
+  // 시험 화면 (사용자 11-13 '해봐'): 주소 끝 ?bundle=app 이면 보이고, 휴대폰은 브라우저를 거치지 않고 유튜브 앱을 바로 연다 -
+  // 앱이 직접 이어 보기 목록을 만들면 될 수도 있어서. 다른 사람에게는 안 보인다.
+  var BUNDLE_TRY = /[?&]bundle=app(&|$)/.test(window.location.search || "");
+  var BUNDLE_ON = BUNDLE_TRY || document.documentElement.getAttribute("data-bundle") === "on";
   var BUNDLE_KEY = "shorts-tracker:bundle", BUNDLE_MAX = 50;
   var asked = [];
   try {
@@ -1938,6 +1941,7 @@ body.has-next main { padding-bottom: 104px; }
   var bundle = make("div", "bundle");
   bundle.appendChild(make("p", "bundle-title", "유튜브에서 줄줄이 신고하기"));
   bundle.appendChild(make("p", "sub", "한 번 열면 쇼츠가 이어서 나와요. 하나 신고하고 다음(⏭)을 누르면 돼요."));
+  if (BUNDLE_TRY) bundle.appendChild(make("p", "sub", "시험 중: 브라우저를 거치지 않고 유튜브 앱을 바로 열어요."));
   var bundleGo = make("a", "go");
   bundleGo.setAttribute("rel", "noopener noreferrer");
   bundle.appendChild(bundleGo);
@@ -1985,6 +1989,7 @@ body.has-next main { padding-bottom: 104px; }
   list.parentNode.insertBefore(bundle, openLine);
   function bundleHref(ids) {
     var u = "https://www.youtube.com/watch_videos?video_ids=" + ids.join(",");
+    if (BUNDLE_TRY && os) return appUrl(u);        // 시험: 앱이 직접 목록을 만들게 (카톡 안이어도 앱으로)
     return kakao ? "kakaotalk://web/openExternal?url=" + encodeURIComponent(u) : u;
   }
   function finishBundle(n) {                     // 묶음의 앞에서부터 n 개를 신고한 것으로 (0 이면 아무것도)
