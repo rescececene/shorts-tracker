@@ -6,11 +6,11 @@
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="신고할 쇼츠 106개 · 좋아요·싫어요·댓글 없이 신고만">
+<meta name="description" content="신고할 쇼츠 107개 · 좋아요·싫어요·댓글 없이 신고만">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="쇼츠 추적기">
 <meta property="og:title" content="쇼츠 추적기">
-<meta property="og:description" content="신고할 쇼츠 106개 · 좋아요·싫어요·댓글 없이 신고만">
+<meta property="og:description" content="신고할 쇼츠 107개 · 좋아요·싫어요·댓글 없이 신고만">
 <meta property="og:url" content="https://rescececene.github.io/shorts-tracker/">
 <meta property="og:image" content="https://rescececene.github.io/shorts-tracker/og.png">
 <meta property="og:image:width" content="1200">
@@ -293,13 +293,17 @@ body.has-next main { padding-bottom: 104px; }
 .sheet .go { justify-content: center; }
 .go.ghost { border: 2px solid var(--act); background: none; color: var(--act); }
 .sheet .undo { justify-self: center; }
+.bundle { margin-top: 18px; padding: 16px; border: 2px solid var(--act); border-radius: 12px; }
+.bundle-title { font-size: 18px; font-weight: 800; }
+.bundle .go { justify-content: center; width: 100%; margin-top: 12px; }
+.bundle-ask { margin-top: 10px; font-weight: 700; }
 </style>
 </head>
 <body>
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 13일 19:43 업데이트</p>
+<p class="asof">11월 13일 20:00 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
 </header>
 
@@ -331,7 +335,7 @@ body.has-next main { padding-bottom: 104px; }
 </div>
 <p class="note" id="maker-note" role="status" hidden></p>
 </section>
-<p class="lead"><span>신고할 쇼츠 <span id="left">106</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
+<p class="lead"><span>신고할 쇼츠 <span id="left">107</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="how" aria-labelledby="how-title">
 <h2 id="how-title">신고하는 방법</h2>
@@ -347,6 +351,17 @@ body.has-next main { padding-bottom: 104px; }
 </section>
 
 <ul class="list" aria-label="신고할 쇼츠">
+<li class="item" data-id="EeWVpqdL6r0">
+<span class="pic"><img src="https://i.ytimg.com/vi/EeWVpqdL6r0/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
+<div class="body">
+<p class="kind rumor">루머·허위 사실</p>
+<h3 class="title">리센느 원이의 방부제 미모 비결✨ 동안 피부+화잘먹 콜라겐 세럼🫧 #원이 #원이근황 #동안피부 #콜라겐세럼 #화잘먹세럼 #연예인추천템 #연예인패션#안녕하세요원이입니다잘부탁드립니다</h3>
+<p class="by"><span>셀럽모아</span><span>11월 13일에 올림</span></p>
+<p class="line">멤버의 나이 같은 정보를 사실과 다르게 적고 상품 홍보에 이용하는 영상이에요</p>
+<div class="acts"><a class="go" href="https://www.youtube.com/shorts/EeWVpqdL6r0" target="_blank" rel="noopener noreferrer" data-copy="멤버의 나이 같은 정보를 사실과 다르게 적고 상품 홍보에 이용하는 영상이에요" data-reason="" data-kind="루머·허위 사실">신고하러 가기</a></div>
+<div class="note" role="status" hidden></div>
+</div>
+</li>
 <li class="item" data-id="olmqONUJt7I">
 <span class="pic"><img src="https://i.ytimg.com/vi/olmqONUJt7I/hqdefault.jpg" alt="" loading="lazy" decoding="async"></span>
 <div class="body">
@@ -1817,6 +1832,62 @@ body.has-next main { padding-bottom: 104px; }
   list.parentNode.insertBefore(openLine, list);
   list.parentNode.insertBefore(mineNote, list.nextSibling);
   list.parentNode.insertBefore(allDone, mineNote.nextSibling);
+
+  // 줄줄이 말아 열기 (사용자 11-13 "쇼츠 연달아 말아주는 건 왜 없어"): 안 한 쇼츠를 위에서부터 유튜브 이어 보기 주소
+  // 하나로 묶는다 (youtube.com/watch_videos - 유튜브가 이름 없는 재생목록을 만들어 줌, 한 번에 BUNDLE_MAX 개). 앱으로
+  // 넘기는 주소는 쓰지 않는다 (앱이 이 주소를 받는지 모름) - 카톡 안이면 카톡 밖으로만. 연 뒤 '다 했어요' 면 모두 신고한 것.
+  var BUNDLE_KEY = "shorts-tracker:bundle", BUNDLE_MAX = 50;
+  var asked = [];
+  try {
+    var was = JSON.parse(load(BUNDLE_KEY) || "[]");
+    if (Array.isArray(was)) asked = was.filter(function (id) { return typeof id === "string"; });
+  } catch (e) { asked = []; }
+  var bundle = make("div", "bundle");
+  bundle.appendChild(make("p", "bundle-title", "유튜브에서 줄줄이 신고하기"));
+  bundle.appendChild(make("p", "sub", "한 번 열면 쇼츠가 이어서 나와요. 하나 신고하고 다음(⏭)을 누르면 돼요."));
+  var bundleGo = make("a", "go");
+  bundleGo.setAttribute("rel", "noopener noreferrer");
+  bundle.appendChild(bundleGo);
+  var bundleAsk = make("div", "bundle-ask");
+  var bundleNote = make("p", "sub");
+  var askLine = make("p");
+  askLine.appendChild(make("span", "", "유튜브에서 다 신고했나요? "));
+  askLine.appendChild(button("다 했어요", function () { finishBundle(true); }));
+  askLine.appendChild(button("아직이요", function () { finishBundle(false); }));
+  bundleAsk.appendChild(bundleNote);
+  bundleAsk.appendChild(askLine);
+  bundle.appendChild(bundleAsk);
+  list.parentNode.insertBefore(bundle, openLine);
+  function bundleHref(ids) {
+    var u = "https://www.youtube.com/watch_videos?video_ids=" + ids.join(",");
+    return kakao ? "kakaotalk://web/openExternal?url=" + encodeURIComponent(u) : u;
+  }
+  function finishBundle(all) {
+    if (all) {
+      asked.forEach(function (id) {
+        var card = cards.filter(function (c) { return idOf(c) === id; })[0];
+        if (card) {
+          done[id] = Date.now();
+          paint(card, true);
+        }
+      });
+      saveDone();
+    }
+    asked = [];
+    save(BUNDLE_KEY, null);
+    refresh();
+  }
+  bundleGo.addEventListener("click", function () {   // 주소는 그대로 두고 (누른 링크가 열려야 함) 물음만 띄운다
+    asked = (bundleGo.getAttribute("data-ids") || "").split(",").filter(Boolean);
+    save(BUNDLE_KEY, JSON.stringify(asked));
+    bundleNote.textContent = "";
+    try {
+      navigator.clipboard.writeText(window.makeReport ? window.makeReport("mock", "") : "").then(function () {
+        bundleNote.textContent = "신고 설명을 복사해 뒀어요 · 쇼츠마다 설명 칸에 붙여 넣어요";
+      }, function () {});
+    } catch (e) { /* 복사가 안 돼도 열기는 그대로 */ }
+    bundleAsk.hidden = false;
+  });
   var bar = make("div", "next-bar");
   var next = make("a", "go");
   var nextLeft = make("small");
@@ -1852,6 +1923,15 @@ body.has-next main { padding-bottom: 104px; }
     mineText.textContent = "내가 신고한 쇼츠 " + hiddenCount + "개는 숨겼어요 · ";
     mineNote.hidden = hiddenCount === 0;
     allDone.hidden = left.length > 0;
+    var pack = left.slice(0, BUNDLE_MAX).map(idOf);
+    bundle.hidden = !pack.length && !asked.length;
+    bundleAsk.hidden = !asked.length;
+    bundleGo.hidden = !pack.length;
+    if (pack.length) {
+      point(bundleGo, bundleHref(pack));
+      bundleGo.setAttribute("data-ids", pack.join(","));
+      bundleGo.textContent = "▶ 쇼츠 " + pack.length + "개 이어서 열기";
+    }
     var target = started ? left[0] : null;
     bar.hidden = !target;
     document.body.classList.toggle("has-next", Boolean(target));
