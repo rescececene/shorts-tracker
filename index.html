@@ -357,11 +357,11 @@ body.has-next main { padding-bottom: 104px; }
 </style>
 </head>
 <body>
-<main data-playlist="" data-order="">
+<main data-playlist="PLJfvJAzC1brY" data-order="olmqONUJt7I,8F_EhzkHAEQ,1pkpou_NF5s,-QmiVNUZsG0,btwUkBU814c,3KJpB3TIA9U,KqII-6lfwG4,CgPrLg-Dsbk,8cygL6fvqgU,Z2T-IIgAgzg,t5DkoOqw47k,GSefLVGmu7E,hOMlOyaqP7c,l-VupddPkGs,PdB0W7NRUY4,VdbSKX0hjV8,2g2WXK2ZS18,adRBaiTAgT0,OW98H0rR-rU,jh_JOBfAkxM,FZttmOefBZs,bnuqF_zndWE,BLrNnHdORBc,wWPDSy19g_c,XBhmQ9vNDRg,8sC5EL4cuNY,71b0fZLlbtA,vPbPmcNikTU,YIYVTIUfXVM,ZpebaUn6P1k,m3GGRSwCKfI,olAQXZVgL3M,ooPN-CZJpQI,ua0GjTe8rTA,vzJIWgJ_Ac0,Vo4fTic5WL4,EsKTF4ZWD0Q,aP1CAzru3rg,VOt5wJryP9Y,zQNqLb3Oy5w,l6svJRnWjNI,bWbW4oSrXEI,5eYaLsMhfsM,lv4WXZf1D38,n1cw_r-kI8I,4Wm1NG9H2I0,REkYzx3wTYM,Dlpu0t0eEIk,s1DJr4KGxWc,qX3o9jvnnS0,yohyN-dg3k0,3g1qlzM8Jn0,CIb9iBUaL0Q,1p4vxlfefGM,FpCzJh0m9FE,Jwzx7ZhTBMM,QcbCyomIezM,WlA651cJjB4,Wy5YNc9xbU0,dUkAaZzpwOU,hgxPWZhWD8I,iQpeuC90_Mc,jKpEUqQs8v0,kXIGkooogYI,o7aNJfnFPSc,oAtHTUPzVf8,pKaGl-zjw40,w3EfXN51Mo0,Blnj8HqTW9Y,-IRc6q1aPKg,PelX8jvjtV8,XrhGE6okKrs,tT3qD_zU9wY,43CQ9ibxHxc,E5jBOtJBpwE,ZEPOJRD9--g,zPCAazxZuRU,77NEmxDoWtA,86ZT6u9cGkw,Wgb88fYKXqg,4sJ-nhS9LHk,GNIaLVoJLIY,A2J9c3rq1ZI,5js1R32oJe0,QoNpbGCPSCw,33w1O80RLp4,Wp9tTPyk5dw,xc-OiVK3sGk,xZVcnWP-Sms,KTykd4CBkNM,9bGhAmItF-Y,0AY6WyhExPw,_2WgBINmfCI,TesGrcnaToU,0OhSGuG_KV4,D8f84IEcNx4,QnsUIxwGao4,gT8h_doeTPw,xuIqpdJKuAc,Q150DmR2XXY,o9uosX58qGk,qTzwShLRaCw,yTSGNK9dzlE,UaywKJRF_eQ,ieK8TfN0Bpk,np0T994Fyu8">
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 21:30 업데이트</p>
+<p class="asof">11월 13일 21:43 업데이트</p>
 </header>
 <p class="lead"><span>신고할 쇼츠 <span id="left">106</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
@@ -1929,7 +1929,16 @@ body.has-next main { padding-bottom: 104px; }
   // 시험 화면 (사용자 11-13 '해봐'): 주소 끝 ?bundle=app 이면 보이고, 휴대폰은 브라우저를 거치지 않고 유튜브 앱을 바로 연다 -
   // 앱이 직접 이어 보기 목록을 만들면 될 수도 있어서. 다른 사람에게는 안 보인다.
   var BUNDLE_TRY = /[?&]bundle=app(&|$)/.test(window.location.search || "");
-  var BUNDLE_ON = BUNDLE_TRY || document.documentElement.getAttribute("data-bundle") === "on";
+  // 진짜 재생목록 (사용자 11-13 - 임시 목록은 앱이 '재생할 수 없음'): '쇼츠 추적기' 계정의 일부 공개 재생목록을 30분마다
+  // 사이트에 맞춘다 (shorts/playlist.py). <main data-playlist data-order> = 재생목록 ID 와 실제 순서 - '몇 번째' 를 유튜브 앱과
+  // 같은 번호로 센다 (사이트에서 빠진 쇼츠가 아직 목록에 있어도 번호를 밀지 않음). 있으면 '안 한 첫 쇼츠' 부터 연다.
+  var mainEl = document.querySelector("main");
+  var PLID = (mainEl && mainEl.getAttribute("data-playlist")) || "";
+  var PLORDER = ((mainEl && mainEl.getAttribute("data-order")) || "").split(",").filter(Boolean);
+  var PLAYLIST = Boolean(PLID && PLORDER.length);
+  var onPage = {};
+  cards.forEach(function (card) { onPage[idOf(card)] = true; });
+  var BUNDLE_ON = PLAYLIST || BUNDLE_TRY || document.documentElement.getAttribute("data-bundle") === "on";
   var BUNDLE_KEY = "shorts-tracker:bundle", BUNDLE_MAX = 50;
   var asked = [];
   try {
@@ -1971,11 +1980,12 @@ body.has-next main { padding-bottom: 104px; }
   upto.appendChild(uptoNote);
   upto.hidden = true;
   uptoInput.addEventListener("keydown", function (event) { if (event.key === "Enter") saveUpto(); });
-  function saveUpto() {
+  function saveUpto() {                          // 재생목록이면 앱에 보이는 번호 그대로 (첫 '안 한 것' 이 3번째면 3부터)
+    var offset = PLAYLIST ? Math.max(0, PLORDER.indexOf(asked[0])) : 0;
     var m = /\d+/.exec(uptoInput.value || "");
-    var n = m ? parseInt(m[0], 10) : 0;
+    var n = (m ? parseInt(m[0], 10) : 0) - offset;
     if (!(n >= 1 && n <= asked.length)) {
-      uptoNote.textContent = "1부터 " + asked.length + "까지 넣어 주세요";
+      uptoNote.textContent = (offset + 1) + "부터 " + (offset + asked.length) + "까지 넣어 주세요";
       return;
     }
     finishBundle(n);
@@ -1986,6 +1996,10 @@ body.has-next main { padding-bottom: 104px; }
   bundle.appendChild(bundleAsk);
   list.parentNode.insertBefore(bundle, openLine);
   function bundleHref(ids) {
+    if (PLAYLIST) {                                // 진짜 재생목록은 앱이 연다 - '브라우저' 를 골랐을 때만 그쪽으로
+      var w = "https://www.youtube.com/watch?v=" + ids[0] + "&list=" + PLID;
+      return how === "web" ? webUrl(w) : (os ? appUrl(w) : w);
+    }
     var u = "https://www.youtube.com/watch_videos?video_ids=" + ids.join(",");
     if (BUNDLE_TRY && os) return appUrl(u);        // 시험: 앱이 직접 목록을 만들게 (카톡 안이어도 앱으로)
     return kakao ? "kakaotalk://web/openExternal?url=" + encodeURIComponent(u) : u;
@@ -2066,14 +2080,26 @@ body.has-next main { padding-bottom: 104px; }
     doneEmpty.hidden = !(tab === "done" && left.length === cards.length);
     allDone.hidden = !(todo && left.length === 0);
     openLine.hidden = !(todo && os && how);
-    var pack = left.slice(0, BUNDLE_MAX).map(idOf);
+    var pack = [], start = 0;
+    if (PLAYLIST) {                                // 재생목록 순서에서 '안 한 첫 쇼츠' 부터 끝까지
+      for (var i = 0; i < PLORDER.length; i++) {
+        if (onPage[PLORDER[i]] && !done[PLORDER[i]]) {
+          start = i;
+          pack = PLORDER.slice(i);
+          break;
+        }
+      }
+    } else {
+      pack = left.slice(0, BUNDLE_MAX).map(idOf);
+    }
     bundle.hidden = !BUNDLE_ON || !todo || (!pack.length && !asked.length);
     bundleAsk.hidden = !asked.length;
     bundleGo.hidden = !pack.length;
     if (pack.length) {
       point(bundleGo, bundleHref(pack));
       bundleGo.setAttribute("data-ids", pack.join(","));
-      bundleGo.textContent = "▶ 쇼츠 " + pack.length + "개 이어서 열기";
+      bundleGo.textContent = !PLAYLIST ? "▶ 쇼츠 " + pack.length + "개 이어서 열기"
+        : (start === 0 ? "▶ 재생목록 처음부터 열기" : "▶ 재생목록 " + (start + 1) + "번째부터 이어서 열기");
     }
     var target = todo && started ? left[0] : null;
     bar.hidden = !target;
