@@ -390,6 +390,7 @@ body.has-next main { padding-bottom: 104px; }
 .bundle { margin-top: 14px; padding: 16px; border-radius: 14px; background: var(--tint); }
 .bundle-title { font-size: 17px; font-weight: 800; }
 .bundle .go { justify-content: center; width: 100%; margin-top: 12px; }
+.bundle > .go { background: #d92b2b; color: #ffffff; }   /* 신고목록 열기는 빨간 단추 (사용자 11-13) - 흰 글씨 대비 4.7:1 */
 .bundle-ask { margin-top: 10px; font-weight: 700; }
 .bundle-ask .ask { display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px; margin-top: 6px; }
 .bundle-ask .ask span { flex-basis: 100%; }
@@ -400,7 +401,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 22:30 업데이트</p>
+<p class="asof">11월 13일 22:35 업데이트</p>
 </header>
 <p class="lead"><span class="big">신고할 쇼츠 <span id="left">107</span>개<span class="sep"> ·</span></span> <span class="small">좋아요·싫어요·댓글 없이 신고만</span></p>
 
@@ -1991,7 +1992,7 @@ body.has-next main { padding-bottom: 104px; }
   var bundle = make("div", "bundle");
   bundle.appendChild(make("p", "bundle-title", "유튜브에서 줄줄이 신고하기"));
   bundle.appendChild(make("p", "sub", PLAYLIST
-    ? "재생목록이 열리면 ‘모두 재생’을 눌러요. 이어서 할 땐 그 번째 쇼츠를 누르면 돼요. 하나 신고하고 다음(⏭)으로 넘겨요."
+    ? "신고목록이 유튜브 재생목록으로 열려요. ‘모두 재생’을 누르고, 이어서 할 땐 그 번째 쇼츠를 눌러요. 하나 신고하고 다음(⏭)으로 넘겨요."
     : "한 번 열면 쇼츠가 이어서 나와요. 하나 신고하고 다음(⏭)을 누르면 돼요."));
   if (BUNDLE_TRY) bundle.appendChild(make("p", "sub", "시험 중: 브라우저를 거치지 않고 유튜브 앱을 바로 열어요."));
   var bundleGo = make("a", "go");
@@ -2166,7 +2167,7 @@ body.has-next main { padding-bottom: 104px; }
       point(bundleGo, bundleHref(pack));
       bundleGo.setAttribute("data-ids", pack.join(","));
       bundleGo.textContent = !PLAYLIST ? "▶ 쇼츠 " + pack.length + "개 이어서 열기"
-        : (start === 0 ? "▶ 재생목록 열기" : "▶ 재생목록 열기 (" + (start + 1) + "번째부터)");
+        : (start === 0 ? "▶ 신고목록 열기" : "▶ 신고목록 열기 (" + (start + 1) + "번째부터)");
     }
     var target = todo && started ? left[0] : null;
     bar.hidden = !target;
