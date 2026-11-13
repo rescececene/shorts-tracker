@@ -71,15 +71,19 @@ body {
 h1, h2, h3, p, ol, ul { margin: 0; }
 main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 
-.mast { padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
-.mast h1 { font-size: 28px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
-.cycle { margin-top: 4px; font-size: 20px; font-weight: 800; color: var(--act); }
-.asof { margin-top: 2px; font-size: 14px; color: var(--soft); }
-.lead { margin-top: 16px; font-size: 22px; line-height: 1.45; font-weight: 800; letter-spacing: -0.02em; }
-.lead span { display: inline-block; }
+/* 정리 (사용자 11-13 '디자인 더 깔끔하게'): 칸을 상자로 두르지 않고 가는 줄과 여백으로 나눈다. 바탕을 칠한 칸은
+   줄줄이 신고 하나뿐 (신고를 시작하는 곳). 채운 단추는 신고를 시작하는 것만. 맨 위 핵심 한 줄이 가장 크다. */
+.mast { padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+.mast h1 { font-size: 22px; font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; }
+.cycle { margin-top: 2px; font-size: 20px; font-weight: 800; color: var(--act); }
+.asof { margin-top: 2px; font-size: 13px; color: var(--soft); }
+.lead { margin-top: 20px; letter-spacing: -0.02em; }
+.lead .big { display: block; font-size: 30px; line-height: 1.25; font-weight: 800; }
+.lead .small { display: block; margin-top: 4px; font-size: 16px; font-weight: 700; color: var(--soft); }
+.lead .sep { display: none; }
 
-.how { padding: 16px 16px 14px; background: var(--tint); border-radius: 12px; }
-.how h2 { margin-bottom: 8px; font-size: 16px; font-weight: 700; }
+.how { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.how h2 { margin-bottom: 10px; font-size: 18px; font-weight: 800; }
 .how ol { display: grid; gap: 6px; padding: 0; list-style: none; }
 .how li { display: grid; grid-template-columns: 1.6em minmax(0, 1fr); }
 .how .n { font-weight: 700; }
@@ -104,7 +108,7 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
   line-height: 1.4;
   text-align: center;
 }
-.dont { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 15px; font-weight: 600; }
+.dont { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--tint); font-size: 15px; font-weight: 700; }
 
 .list { margin-top: 8px; padding: 0; list-style: none; }
 .item {
@@ -129,7 +133,7 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 }
 .kind.rumor { background: var(--rumor-bg); color: var(--rumor); }
 .kind.mock { background: var(--mock-bg); color: var(--mock); }
-.title { margin-top: 2px; font-size: 17px; line-height: 1.45; font-weight: 700; }
+.title { margin-top: 4px; font-size: 16px; line-height: 1.45; font-weight: 700; }
 .by { margin-top: 4px; font-size: 14px; color: var(--soft); }
 .by span { display: block; }
 .line { margin-top: 10px; font-size: 15px; }
@@ -163,7 +167,7 @@ main { max-width: 37.5rem; margin: 0 auto; padding: 18px 16px 56px; }
 }
 .empty { margin-top: 20px; color: var(--soft); }
 
-.tip { margin-top: 18px; padding: 16px; border: 1px solid var(--rule); border-radius: 12px; }
+.tip { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); }
 .tip h2 { font-size: 18px; font-weight: 800; }
 .tip form { display: grid; gap: 6px; margin-top: 12px; }
 .tip label { margin-top: 6px; font-size: 14px; font-weight: 700; }
@@ -235,8 +239,21 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
   .item { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
   .pic { width: 96px; }
 }
-.maker { margin-top: 18px; padding: 16px; border: 2px solid var(--act); border-radius: 12px; }
-.maker h2 { font-size: 18px; font-weight: 800; }
+.maker { margin-top: 20px; padding-top: 4px; border-top: 1px solid var(--rule); }
+.maker details { margin-top: 0; }
+.maker summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  color: var(--ink);
+  list-style: none;
+}
+.maker summary::-webkit-details-marker { display: none; }
+.maker summary h2 { font-size: 18px; font-weight: 800; }
+.maker summary::after { content: "펼치기"; font-size: 14px; font-weight: 700; color: var(--act); }
+.maker details[open] summary::after { content: "접기"; }
 .kinds, .maker-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .kind-btn { min-height: 44px; padding: 0 14px; border: 2px solid var(--act); border-radius: 10px; background: none;
   color: var(--act); font: inherit; font-weight: 700; cursor: pointer; }
@@ -280,8 +297,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 .tip form { grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; }
 .tip form label, .tip form #tip-note { grid-column: 1 / -1; }
 .tip form button { grid-row: 2; grid-column: 2; justify-self: stretch; margin-top: 0; }
-.top-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.top-acts .go { flex: 1 1 auto; justify-content: center; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+.top-acts { display: flex; gap: 8px; margin-top: 16px; }
+.top-acts .go { flex: 1 1 0; justify-content: center; padding: 0 10px; border: 0; font: inherit; font-weight: 700; white-space: nowrap; cursor: pointer; }
 .top-acts .go.ghost { border: 2px solid var(--act); }
 .tabs {
   position: sticky;
@@ -363,8 +380,8 @@ body.has-next main { padding-bottom: 104px; }
 .sheet .go { justify-content: center; }
 .go.ghost { border: 2px solid var(--act); background: none; color: var(--act); }
 .sheet .undo { justify-self: center; }
-.bundle { margin-top: 18px; padding: 16px; border: 2px solid var(--act); border-radius: 12px; }
-.bundle-title { font-size: 18px; font-weight: 800; }
+.bundle { margin-top: 14px; padding: 16px; border-radius: 14px; background: var(--tint); }
+.bundle-title { font-size: 17px; font-weight: 800; }
 .bundle .go { justify-content: center; width: 100%; margin-top: 12px; }
 .bundle-ask { margin-top: 10px; font-weight: 700; }
 .bundle-ask .ask { display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px; margin-top: 6px; }
@@ -376,9 +393,9 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 22:07 업데이트</p>
+<p class="asof">11월 13일 22:17 업데이트</p>
 </header>
-<p class="lead"><span>신고할 쇼츠 <span id="left">106</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
+<p class="lead"><span class="big">신고할 쇼츠 <span id="left">106</span>개<span class="sep"> ·</span></span> <span class="small">좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="tip" aria-labelledby="tip-title">
 <h2 id="tip-title">쇼츠 제보하기</h2>
@@ -395,8 +412,9 @@ body.has-next main { padding-bottom: 104px; }
 </section>
 
 <section class="maker" aria-labelledby="maker-title">
-<h2 id="maker-title">신고 글 만들기</h2>
-<p class="sub">유튜브 규정을 들어 신고 화면 설명 칸에 붙여 넣을 글을 만들어요.</p>
+<details>
+<summary><h2 id="maker-title">신고 글 만들기</h2></summary>
+<p class="sub">유튜브 규정을 들어 신고 화면 설명 칸에 붙여 넣을 글을 만들어요. [신고하러 가기]를 누르면 글이 저절로 복사돼서, 평소엔 안 열어도 돼요.</p>
 <div class="kinds" role="group" aria-label="문제 종류">
 <button type="button" class="kind-btn" data-make="mock">비하·조롱</button>
 <button type="button" class="kind-btn" data-make="rumor">루머·허위 사실</button>
@@ -407,6 +425,7 @@ body.has-next main { padding-bottom: 104px; }
 <button type="button" class="kind-btn" id="maker-again">다른 문장으로</button>
 </div>
 <p class="note" id="maker-note" role="status" hidden></p>
+</details>
 </section>
 
 <section class="how" aria-labelledby="how-title">
@@ -1921,9 +1940,9 @@ body.has-next main { padding-bottom: 104px; }
   var lead = document.querySelector(".lead");
   if (lead) {                                      // 맨 위 핵심 한 줄 밑: 바로 목록으로 · 삭제된 쇼츠 보기
     var topActs = make("div", "top-acts");
-    topActs.appendChild(button("▶ 바로 신고하기", function () { showTab("todo"); jumpToList(); }, "go"));
+    topActs.appendChild(button("바로 신고하기", function () { showTab("todo"); jumpToList(); }, "go"));
     if (goneSection) {
-      topActs.appendChild(button("삭제된 쇼츠 " + goneCount + "개 →", function () { showTab("gone"); jumpToList(); }, "go ghost"));
+      topActs.appendChild(button("삭제된 쇼츠 " + goneCount + "개", function () { showTab("gone"); jumpToList(); }, "go ghost"));
     }
     lead.parentNode.insertBefore(topActs, lead.nextSibling);
   }
@@ -2065,7 +2084,7 @@ body.has-next main { padding-bottom: 104px; }
   var next = make("a", "go");
   var nextLeft = make("small");
   next.setAttribute("rel", "noopener noreferrer");
-  next.appendChild(make("span", "", "다음 쇼츠 신고하기 →"));
+  next.appendChild(make("span", "", "다음 쇼츠 신고하기"));
   next.appendChild(nextLeft);
   bar.appendChild(next);
   document.body.appendChild(bar);
