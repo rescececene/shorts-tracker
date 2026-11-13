@@ -361,7 +361,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 13일 21:55 업데이트</p>
+<p class="asof">11월 13일 22:00 업데이트</p>
 </header>
 <p class="lead"><span>신고할 쇼츠 <span id="left">106</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
@@ -1947,7 +1947,9 @@ body.has-next main { padding-bottom: 104px; }
   } catch (e) { asked = []; }
   var bundle = make("div", "bundle");
   bundle.appendChild(make("p", "bundle-title", "유튜브에서 줄줄이 신고하기"));
-  bundle.appendChild(make("p", "sub", "한 번 열면 쇼츠가 이어서 나와요. 하나 신고하고 다음(⏭)을 누르면 돼요."));
+  bundle.appendChild(make("p", "sub", PLAYLIST
+    ? "재생목록이 열리면 ‘모두 재생’을 눌러요. 이어서 할 땐 그 번째 쇼츠를 누르면 돼요. 하나 신고하고 다음(⏭)으로 넘겨요."
+    : "한 번 열면 쇼츠가 이어서 나와요. 하나 신고하고 다음(⏭)을 누르면 돼요."));
   if (BUNDLE_TRY) bundle.appendChild(make("p", "sub", "시험 중: 브라우저를 거치지 않고 유튜브 앱을 바로 열어요."));
   var bundleGo = make("a", "go");
   bundleGo.setAttribute("rel", "noopener noreferrer");
@@ -1995,26 +1997,10 @@ body.has-next main { padding-bottom: 104px; }
   bundleAsk.appendChild(upto);
   bundle.appendChild(bundleAsk);
   list.parentNode.insertBefore(bundle, openLine);
-  // 시험 (?pltest, 사용자 11-13 캡처: 아이폰 카톡에서 youtube:// 영상 주소는 첫 영상만 열고 목록을 버림) - 재생목록을
-  // 여는 길 세 가지를 나란히 두고 사용자 폰에서 어느 것이 목록으로 열리는지 본다. 다른 사람에게는 안 보인다.
-  if (PLAYLIST && /[?&]pltest(&|=|$)/.test(window.location.search || "")) {
-    var listPage = "https://www.youtube.com/playlist?list=" + PLID;
-    var firstOne = "https://www.youtube.com/watch?v=" + PLORDER[0] + "&list=" + PLID + "&index=1";
-    var probe = make("div", "bundle pltest");
-    probe.appendChild(make("p", "bundle-title", "재생목록 여는 길 시험"));
-    [["A · 앱으로 재생목록 화면", appUrl(listPage)], ["B · 카톡 밖으로 재생목록 화면", webUrl(listPage)],
-     ["C · 카톡 밖으로 첫 쇼츠부터", webUrl(firstOne)]].forEach(function (t) {
-      var a = make("a", "go", t[0]);
-      a.setAttribute("rel", "noopener noreferrer");
-      point(a, t[1]);
-      probe.appendChild(a);
-    });
-    list.parentNode.insertBefore(probe, bundle);
-  }
   function bundleHref(ids) {
-    if (PLAYLIST) {                                // 진짜 재생목록은 앱이 연다 - '브라우저' 를 골랐을 때만 그쪽으로
-      var w = "https://www.youtube.com/watch?v=" + ids[0] + "&list=" + PLID;
-      return how === "web" ? webUrl(w) : (os ? appUrl(w) : w);
+    if (PLAYLIST) {                                // 재생목록 '화면' 을 - 휴대폰은 고른 쪽(앱 A / 브라우저 B)으로
+      var w = listPageUrl();                       // (영상 주소 watch?v=…&list=… 는 아이폰 앱이 목록을 버림 - 11-13 캡처)
+      return how === "web" ? webUrl(w) : (os && how === "app" ? appUrl(w) : w);
     }
     var u = "https://www.youtube.com/watch_videos?video_ids=" + ids.join(",");
     if (BUNDLE_TRY && os) return appUrl(u);        // 시험: 앱이 직접 목록을 만들게 (카톡 안이어도 앱으로)
@@ -2037,7 +2023,18 @@ body.has-next main { padding-bottom: 104px; }
     uptoNote.textContent = "";
     refresh();
   }
-  bundleGo.addEventListener("click", function () {   // 주소는 그대로 두고 (누른 링크가 열려야 함) 물음만 띄운다
+  function listPageUrl() {
+    return "https://www.youtube.com/playlist?list=" + PLID;
+  }
+  bundleGo.addEventListener("click", function (event) {
+    if (PLAYLIST && os && !how) {                  // 휴대폰에서 처음: 유튜브 앱(A) / 브라우저(B) 를 묻는다 (쇼츠 카드와 같은 창)
+      event.preventDefault();
+      askFor(appUrl(listPageUrl()), webUrl(listPageUrl()), startBundle);
+      return;
+    }
+    startBundle();
+  });
+  function startBundle() {                         // 주소는 그대로 두고 (누른 링크가 열려야 함) 물음만 띄운다
     asked = (bundleGo.getAttribute("data-ids") || "").split(",").filter(Boolean);
     save(BUNDLE_KEY, JSON.stringify(asked));
     upto.hidden = true;
@@ -2048,7 +2045,7 @@ body.has-next main { padding-bottom: 104px; }
       }, function () {});
     } catch (e) { /* 복사가 안 돼도 열기는 그대로 */ }
     bundleAsk.hidden = false;
-  });
+  }
   var bar = make("div", "next-bar");
   var next = make("a", "go");
   var nextLeft = make("small");
@@ -2115,7 +2112,7 @@ body.has-next main { padding-bottom: 104px; }
       point(bundleGo, bundleHref(pack));
       bundleGo.setAttribute("data-ids", pack.join(","));
       bundleGo.textContent = !PLAYLIST ? "▶ 쇼츠 " + pack.length + "개 이어서 열기"
-        : (start === 0 ? "▶ 재생목록 처음부터 열기" : "▶ 재생목록 " + (start + 1) + "번째부터 이어서 열기");
+        : (start === 0 ? "▶ 재생목록 열기" : "▶ 재생목록 열기 (" + (start + 1) + "번째부터)");
     }
     var target = todo && started ? left[0] : null;
     bar.hidden = !target;
@@ -2151,6 +2148,10 @@ body.has-next main { padding-bottom: 104px; }
     pending = null;
   }
   function ask(card) {
+    askFor(appUrl(home(card)), webUrl(home(card)), function () { opened(card); });
+  }
+  // 앱 / 브라우저 고르기 창 - 쇼츠 카드와 재생목록 버튼이 같이 쓴다. then = 고른 뒤 할 일 (그 링크가 열리는 동안)
+  function askFor(appHref, webHref, then) {
     if (!sheet) {
       sheet = make("div", "sheet");
       sheet.setAttribute("role", "dialog");
@@ -2179,17 +2180,17 @@ body.has-next main { padding-bottom: 104px; }
         }
         how = a.getAttribute("data-open");
         save(OPEN_KEY, how);
-        var card = pending;
+        var then = pending;
         pending = null;
-        if (card) opened(card);
+        if (then) then();
         setTimeout(function () { sheet.hidden = true; applyHow(); }, 0);   // 누른 링크가 열린 뒤에
       });
       document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeSheet(); });
       document.body.appendChild(sheet);
     }
-    pending = card;
-    point(sheetApp, appUrl(home(card)));
-    point(sheetWeb, webUrl(home(card)));
+    pending = then;
+    point(sheetApp, appHref);
+    point(sheetWeb, webHref);
     sheet.hidden = false;
     if (sheetApp.focus) sheetApp.focus();
   }
