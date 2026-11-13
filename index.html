@@ -7,8 +7,16 @@
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="신고할 쇼츠 106개 · 좋아요·싫어요·댓글 없이 신고만">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="쇼츠 추적기">
 <meta property="og:title" content="쇼츠 추적기">
 <meta property="og:description" content="신고할 쇼츠 106개 · 좋아요·싫어요·댓글 없이 신고만">
+<meta property="og:url" content="https://rescececene.github.io/shorts-tracker/">
+<meta property="og:image" content="https://rescececene.github.io/shorts-tracker/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="쇼츠 추적기 · 30분마다 업데이트돼요">
+<meta name="twitter:card" content="summary_large_image">
 <title>쇼츠 추적기</title>
 <style>
 :root {
@@ -230,13 +238,68 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 #maker-text { display: block; width: 100%; margin-top: 10px; padding: 10px; border: 1px solid var(--rule, #ccc);
   border-radius: 10px; font: inherit; font-size: 15px; line-height: 1.6; resize: vertical; box-sizing: border-box; }
 .maker-acts .go { border: 0; font: inherit; cursor: pointer; }
+
+/* 내가 신고한 쇼츠 · 줄줄이 신고 · 여는 곳 고르기 (사용자 11-13) */
+.mine .pic, .mine .kind, .mine .title, .mine .by, .mine .line, .mine .pick, .mine .acts { opacity: 0.45; }
+.mine-row { margin-top: 10px; font-weight: 700; color: var(--ok-ink); }
+.undo {
+  min-height: 44px;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  color: var(--act);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.mine-note, .open-line { margin-top: 14px; font-size: 15px; color: var(--soft); }
+.all-done { margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: var(--ok-bg); color: var(--ok-ink); font-weight: 700; }
+.next-bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+.next-bar .go { flex: 1; max-width: 37.5rem; justify-content: space-between; gap: 12px; }
+.next-bar small { font-size: 14px; font-weight: 600; opacity: 0.85; }
+body.has-next main { padding-bottom: 104px; }
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+.sheet-box {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  max-width: 37.5rem;
+  padding: 20px 16px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 16px 16px 0 0;
+  background: var(--paper);
+}
+.sheet-title { font-size: 20px; font-weight: 800; }
+.sheet .go { justify-content: center; }
+.go.ghost { border: 2px solid var(--act); background: none; color: var(--act); }
+.sheet .undo { justify-self: center; }
 </style>
 </head>
 <body>
 <main>
 <header class="mast">
 <h1>쇼츠 추적기</h1>
-<p class="asof">11월 13일 19:30 업데이트</p>
+<p class="asof">11월 13일 19:43 업데이트</p>
 <p class="cycle">30분마다 업데이트돼요</p>
 </header>
 
@@ -268,7 +331,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 </div>
 <p class="note" id="maker-note" role="status" hidden></p>
 </section>
-<p class="lead"><span>신고할 쇼츠 106개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
+<p class="lead"><span>신고할 쇼츠 <span id="left">106</span>개 ·</span> <span>좋아요·싫어요·댓글 없이 신고만</span></p>
 
 <section class="how" aria-labelledby="how-title">
 <h2 id="how-title">신고하는 방법</h2>
@@ -279,6 +342,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 <li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
 </ol>
 <p class="dont">좋아요·싫어요는 누르지 말고 댓글도 달지 마세요. 반응하면 영상이 더 퍼져요.</p>
+<p class="sub">신고한 쇼츠는 이 브라우저가 기억해서, 다음에 오면 목록에서 빠져요.</p>
 <p class="sub">여기 없는 쇼츠를 알면 맨 위 ‘쇼츠 제보하기’에서 링크를 보내 주세요.</p>
 </section>
 
@@ -1582,9 +1646,18 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
     box.hidden = false;
   }
 
+  // 화면 아래 [다음 쇼츠 신고하기] 는 카드 밖에 있다 - data-for 로 그 쇼츠 카드를 찾는다
+  function cardById(id) {
+    var all = id ? document.querySelectorAll(".item[data-id]") : [];
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute("data-id") === id) return all[i];
+    }
+    return null;
+  }
+
   document.addEventListener("click", function (event) {
     var el = event.target.closest ? event.target.closest("[data-copy]") : null;
-    var card = el && el.closest(".item");
+    var card = el && (el.closest(".item") || cardById(el.getAttribute("data-for")));
     var box = card && card.querySelector(".note");
     var line = el && el.getAttribute("data-copy");
     var text = line && window.makeReport ? window.makeReport(el.getAttribute("data-kind"), line) : line;
@@ -1648,6 +1721,236 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
     if (img.complete && img.naturalWidth === 0) broken();
     img.addEventListener("error", broken);
   });
+})();
+(function () {
+  "use strict";
+  // 내가 신고한 쇼츠 · 줄줄이 신고 · 여는 곳 고르기 (사용자 2026-11-13). 이 브라우저(localStorage)에만 적는다 -
+  // 신고한 쇼츠 ID 와 고른 여는 곳뿐, 이름 · 기기 정보는 안 모은다. 저장이 막혀 있어도 이번에는 기억하고 돈다.
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".item[data-id]:not(.gone)"));
+  if (!cards.length) return;
+  var DONE_KEY = "shorts-tracker:reported", OPEN_KEY = "shorts-tracker:open", KEEP = 1000;
+  var storage = null;
+  try { storage = window.localStorage; } catch (e) { storage = null; }
+  function load(key) {
+    try { return storage ? storage.getItem(key) : null; } catch (e) { return null; }
+  }
+  function save(key, value) {
+    try {
+      if (storage && value === null) storage.removeItem(key);
+      else if (storage) storage.setItem(key, value);
+    } catch (e) { /* 저장이 막혀도 이번에는 기억한다 */ }
+  }
+  var done = {};
+  try {
+    var got = JSON.parse(load(DONE_KEY) || "{}");
+    if (got && typeof got === "object" && !Array.isArray(got)) done = got;
+  } catch (e) { done = {}; }
+  function saveDone() {
+    var ids = Object.keys(done);
+    if (ids.length > KEEP) {                       // 오래된 것부터 잊는다
+      ids.sort(function (a, b) { return (Number(done[a]) || 0) - (Number(done[b]) || 0); });
+      ids.slice(0, ids.length - KEEP).forEach(function (id) { delete done[id]; });
+    }
+    save(DONE_KEY, JSON.stringify(done));
+  }
+
+  // 휴대폰에서는 어디서 열지 고른다: 유튜브 앱(로그인돼 있음) / 브라우저. 카톡 안 브라우저는 유튜브 로그인이 안 돼
+  // 있어서 '브라우저' 를 고르면 카톡 밖(크롬 · 사파리)으로 연다. PC 는 묻지 않고 링크 그대로.
+  var ua = navigator.userAgent || "";
+  var os = /Android/i.test(ua) ? "android" : (/iPhone|iPad|iPod/i.test(ua) ? "ios" : "");
+  var kakao = /KAKAOTALK/i.test(ua);
+  var inApp = kakao || /NAVER\(inapp|DaumApps|Instagram|FBAN|FBAV|FB_IAB|everytimeApp|BAND\/| Line\/|dcinside/i.test(ua) ||
+    (os === "android" && /; wv\)/.test(ua)) || (os === "ios" && !/Safari\//.test(ua));
+  var how = os ? load(OPEN_KEY) : null;
+  if (how !== "app" && how !== "web") how = null;
+
+  function appUrl(href) {
+    var rest = href.replace(/^https:\/\//, "");
+    if (os === "android") {
+      return "intent://" + rest + "#Intent;scheme=https;package=com.google.android.youtube;S.browser_fallback_url=" +
+        encodeURIComponent(href) + ";end";
+    }
+    return os === "ios" ? "youtube://" + rest : href;
+  }
+  function webUrl(href) {
+    return kakao ? "kakaotalk://web/openExternal?url=" + encodeURIComponent(href) : href;
+  }
+  function point(a, href) {                        // 앱 · 카톡 밖으로 넘기는 주소는 새 창 없이 (빈 창이 남지 않게)
+    a.setAttribute("href", href);
+    if (/^https:/.test(href)) a.setAttribute("target", "_blank");
+    else a.removeAttribute("target");
+  }
+  function idOf(card) { return card.getAttribute("data-id"); }
+  function linkOf(card) { return card.querySelector("a[data-copy]"); }
+  function home(card) { return linkOf(card).getAttribute("data-href"); }
+  cards = cards.filter(function (card) { return linkOf(card); });
+  if (!cards.length) return;
+  cards.forEach(function (card) { linkOf(card).setAttribute("data-href", linkOf(card).getAttribute("href")); });
+
+  function make(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text) e.textContent = text;
+    return e;
+  }
+  function button(text, onClick) {
+    var b = make("button", "undo", text);
+    b.type = "button";
+    b.addEventListener("click", onClick);
+    return b;
+  }
+
+  // 목록 위: 여는 곳 · 목록 아래: 숨긴 수 · 다 했어요 · 화면 아래: 다음 쇼츠
+  var list = cards[0].parentNode;
+  var openText = make("span");
+  var openLine = make("p", "open-line");
+  openLine.appendChild(openText);
+  openLine.appendChild(button("바꾸기", function () { how = null; save(OPEN_KEY, null); applyHow(); }));
+  var mineText = make("span");
+  var mineNote = make("p", "mine-note");
+  mineNote.appendChild(mineText);
+  mineNote.appendChild(button("다시 보기", function () {
+    cards.forEach(function (card) { card.hidden = false; });
+    refresh();
+  }));
+  var allDone = make("p", "all-done", "다 신고했어요. 새로 올라오면 여기에 떠요.");
+  list.parentNode.insertBefore(openLine, list);
+  list.parentNode.insertBefore(mineNote, list.nextSibling);
+  list.parentNode.insertBefore(allDone, mineNote.nextSibling);
+  var bar = make("div", "next-bar");
+  var next = make("a", "go");
+  var nextLeft = make("small");
+  next.setAttribute("rel", "noopener noreferrer");
+  next.appendChild(make("span", "", "다음 쇼츠 신고하기 →"));
+  next.appendChild(nextLeft);
+  bar.appendChild(next);
+  document.body.appendChild(bar);
+  var leftCount = document.getElementById("left");
+  var started = false;                             // 이번에 하나라도 열었으면 [다음 쇼츠] 를 띄운다
+
+  function paint(card, on) {
+    card.classList.toggle("mine", on);
+    var row = card.querySelector(".mine-row");
+    if (on && !row) {
+      row = make("p", "mine-row");
+      row.appendChild(make("span", "", "신고했어요 ✓"));
+      row.appendChild(document.createTextNode(" "));
+      row.appendChild(button("되돌리기", function () {
+        delete done[idOf(card)];
+        saveDone();
+        paint(card, false);
+        refresh();
+      }));
+      (card.querySelector(".body") || card).appendChild(row);
+    }
+    if (row) row.hidden = !on;
+  }
+  function refresh() {
+    var left = cards.filter(function (card) { return !done[idOf(card)]; });
+    var hiddenCount = cards.filter(function (card) { return card.hidden; }).length;
+    if (leftCount) leftCount.textContent = String(left.length);
+    mineText.textContent = "내가 신고한 쇼츠 " + hiddenCount + "개는 숨겼어요 · ";
+    mineNote.hidden = hiddenCount === 0;
+    allDone.hidden = left.length > 0;
+    var target = started ? left[0] : null;
+    bar.hidden = !target;
+    document.body.classList.toggle("has-next", Boolean(target));
+    if (target) {
+      var a = linkOf(target);
+      point(next, a.getAttribute("href"));
+      ["data-copy", "data-kind", "data-reason"].forEach(function (name) { next.setAttribute(name, a.getAttribute(name) || ""); });
+      next.setAttribute("data-for", idOf(target));
+      nextLeft.textContent = "남은 " + left.length + "개";
+    }
+  }
+  function applyHow() {
+    cards.forEach(function (card) {
+      point(linkOf(card), how === "app" ? appUrl(home(card)) : (how === "web" ? webUrl(home(card)) : home(card)));
+    });
+    openLine.hidden = !(os && how);
+    openText.textContent = "신고 링크를 여는 곳: " + (how === "app" ? "유튜브 앱" : "브라우저") + " · ";
+    refresh();
+  }
+  function opened(card) {
+    started = true;
+    done[idOf(card)] = Date.now();
+    saveDone();
+    paint(card, true);
+    setTimeout(refresh, 0);                        // 누른 링크가 열린 뒤에 [다음 쇼츠] 주소를 바꾼다
+  }
+
+  // 휴대폰에서 처음 누를 때 어디서 열지 묻는 창
+  var sheet = null, sheetApp = null, sheetWeb = null, pending = null;
+  function closeSheet() {
+    if (sheet) sheet.hidden = true;
+    pending = null;
+  }
+  function ask(card) {
+    if (!sheet) {
+      sheet = make("div", "sheet");
+      sheet.setAttribute("role", "dialog");
+      sheet.setAttribute("aria-modal", "true");
+      sheet.setAttribute("aria-label", "어디서 열까요?");
+      var box = make("div", "sheet-box");
+      box.appendChild(make("p", "sheet-title", "어디서 열까요?"));
+      box.appendChild(make("p", "sub", inApp ? "앱 안에서 열면 유튜브 로그인이 안 돼 있어서 ‘유튜브 앱’이 좋아요."
+        : "유튜브 앱이 있으면 ‘유튜브 앱’이 편해요."));
+      sheetApp = make("a", "go", "유튜브 앱으로 열기");
+      sheetApp.setAttribute("data-open", "app");
+      sheetWeb = make("a", "go ghost", "브라우저로 열기");
+      sheetWeb.setAttribute("data-open", "web");
+      [sheetApp, sheetWeb].forEach(function (a) {
+        a.setAttribute("rel", "noopener noreferrer");
+        box.appendChild(a);
+      });
+      box.appendChild(make("p", "sub", "고른 곳은 기억해요. 목록 위 ‘바꾸기’로 언제든 바꿀 수 있어요."));
+      box.appendChild(button("닫기", closeSheet));
+      sheet.appendChild(box);
+      sheet.addEventListener("click", function (event) {
+        var a = event.target.closest ? event.target.closest("[data-open]") : null;
+        if (!a) {
+          if (event.target === sheet) closeSheet();          // 바깥(어두운 곳)을 누르면 닫기
+          return;
+        }
+        how = a.getAttribute("data-open");
+        save(OPEN_KEY, how);
+        var card = pending;
+        pending = null;
+        if (card) opened(card);
+        setTimeout(function () { sheet.hidden = true; applyHow(); }, 0);   // 누른 링크가 열린 뒤에
+      });
+      document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeSheet(); });
+      document.body.appendChild(sheet);
+    }
+    pending = card;
+    point(sheetApp, appUrl(home(card)));
+    point(sheetWeb, webUrl(home(card)));
+    sheet.hidden = false;
+    if (sheetApp.focus) sheetApp.focus();
+  }
+
+  document.addEventListener("click", function (event) {
+    var a = event.target.closest ? event.target.closest("[data-copy]") : null;
+    if (!a) return;
+    var host = a.closest(".item");
+    var id = a.getAttribute("data-for") || (host ? idOf(host) : "");
+    var card = cards.filter(function (c) { return idOf(c) === id; })[0];
+    if (!card) return;
+    if (os && !how) {                              // 휴대폰에서 처음: 바로 열지 않고 어디서 열지 묻는다
+      event.preventDefault();
+      ask(card);
+      return;
+    }
+    opened(card);
+  });
+
+  cards.forEach(function (card) {
+    if (done[idOf(card)]) {
+      paint(card, true);
+      card.hidden = true;
+    }
+  });
+  applyHow();
 })();
 </script>
 </body>
