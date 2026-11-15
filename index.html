@@ -269,7 +269,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 .maker-acts .go { border: 0; font: inherit; cursor: pointer; }
 
 /* 내가 신고한 쇼츠 · 줄줄이 신고 · 여는 곳 고르기 (사용자 11-13) */
-.mine .pic, .mine .kind, .mine .title, .mine .by, .mine .line, .mine .pick, .mine .acts { opacity: 0.45; }
+.mine .pic, .mine .kind, .mine .title, .mine .by, .mine .line, .mine .pick { opacity: 0.45; }   /* [설명 복사] 는 흐리게 안 함 */
 .mine-row { margin-top: 10px; font-weight: 700; color: var(--ok-ink); }
 .undo {
   min-height: 44px;
@@ -285,7 +285,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
 }
 .open-line { margin-top: 14px; font-size: 15px; color: var(--soft); }
 .acts .go { flex: 1; justify-content: center; }
-.done-btn {
+.done-btn, .copy-btn {
   flex: 0 0 auto;
   min-height: 44px;
   padding: 0 10px;
@@ -299,7 +299,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-vis
   cursor: pointer;
 }
 .acts { gap: 8px; }
-.acts .go { padding: 0 10px; white-space: nowrap; }
+/* 단추 칸 (사용자 11-15): 윗줄 [신고하러 가기] · 아랫줄 [설명 복사] [신고 완료] 반반. 연 뒤에는 [설명 복사] 만 한 줄로 */
+.acts .go { flex: 1 1 100%; padding: 0 10px; white-space: nowrap; }
+.acts .copy-btn, .acts .done-btn { flex: 1 1 0; }
+.bundle .copy-btn { width: 100%; margin-top: 8px; }
 .tip form { grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; }
 .tip form label, .tip form #tip-note { grid-column: 1 / -1; }
 .tip form button { grid-row: 2; grid-column: 2; justify-self: stretch; margin-top: 0; }
@@ -400,7 +403,7 @@ body.has-next main { padding-bottom: 104px; }
 <header class="mast">
 <h1>쇼츠 추적기</h1>
 <p class="cycle">30분마다 업데이트돼요</p>
-<p class="asof">11월 15일 16:30 업데이트</p>
+<p class="asof">11월 15일 16:45 업데이트</p>
 </header>
 <p class="lead"><span class="big">신고할 쇼츠 <span id="left">144</span>개<span class="sep"> ·</span></span> <span class="small">좋아요·싫어요·댓글 없이 신고만</span> <span class="notice">신고한 뒤엔 <span class="key">⋮<span class="sr">더보기</span></span> → ‘채널 추천 안함’까지 눌러 주세요</span></p>
 
@@ -436,7 +439,7 @@ body.has-next main { padding-bottom: 104px; }
 <section class="how" aria-labelledby="how-title">
 <h2 id="how-title">신고하는 방법</h2>
 <ol>
-<li><span class="n" aria-hidden="true">①</span><span><span class="chip">신고하러 가기</span> 누르기<small>설명이 자동으로 복사돼요</small></span></li>
+<li><span class="n" aria-hidden="true">①</span><span><span class="chip">설명 복사</span> → <span class="chip">신고하러 가기</span> 누르기<small>설명은 ‘설명 복사’를 누를 때만 복사돼요</small></span></li>
 <li><span class="n" aria-hidden="true">②</span><span>쇼츠가 열리면 화면을 한 번 눌러 멈추고 <span class="key">⋮<span class="sr">더보기</span></span> → 신고<small>그대로 두면 계속 돌아가면서 조회수가 올라가요</small></span></li>
 <li><span class="n" aria-hidden="true">③</span><span>사유 고르기<small>쇼츠 내용에 맞는 사유를 골라요</small></span></li>
 <li><span class="n" aria-hidden="true">④</span><span>설명 칸에 붙여넣고 보내기</span></li>
@@ -2148,7 +2151,7 @@ body.has-next main { padding-bottom: 104px; }
   document.getElementById("maker-copy").addEventListener("click", function () {
     var text = box.value;
     function done(ok) {
-      note.textContent = ok ? "복사했어요 · 신고 화면 설명 칸에 붙여 넣어요" : "자동 복사가 안 됐어요. 글을 길게 눌러 복사해 주세요.";
+      note.textContent = ok ? "복사했어요 · 신고 화면 설명 칸에 붙여 넣어요" : "복사가 안 됐어요. 글을 길게 눌러 복사해 주세요.";
       note.hidden = false;
     }
     try {
@@ -2161,9 +2164,11 @@ body.has-next main { padding-bottom: 104px; }
 })();
 (function () {
   "use strict";
-  var FAIL = "자동 복사가 안 됐어요. 아래 글을 길게 눌러 복사해 주세요.";
+  var FAIL = "복사가 안 됐어요. 아래 글을 길게 눌러 복사해 주세요.";
 
-  // 누른 그 순간에 바로 복사를 시작한다 (기다리거나 링크 이동을 막지 않음 → 휴대폰에서도 쇼츠가 그대로 열림)
+  // 클립보드에는 [설명 복사] 를 누를 때만 쓴다 (사용자 11-15 "[신고하러 가기]는 쇼츠만 열고, 복사는 따로 [설명 복사]
+  // 버튼으로" · "자동으로 클립보드에 담기진 않도록"). 쇼츠를 여는 링크 · [다음 쇼츠] · [신고목록 열기] 는 복사하지 않는다 -
+  // 링크의 data-copy 는 붙여 넣을 설명을 들고 있을 뿐이다. 누른 그 순간에 바로 복사를 시작한다.
   function copyText(text, done) {
     try {
       navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
@@ -2190,7 +2195,12 @@ body.has-next main { padding-bottom: 104px; }
     box.hidden = false;
   }
 
-  // 화면 아래 [다음 쇼츠 신고하기] 는 카드 밖에 있다 - data-for 로 그 쇼츠 카드를 찾는다
+  // 복사해서 box(.note)에 결과를 보여 준다 - 카드의 [설명 복사] 와 신고목록 칸의 [설명 복사] 가 같이 쓴다
+  window.copyInto = function (box, text, message) {
+    copyText(text, function (ok) { show(box, ok, ok ? message : FAIL, text); });
+  };
+
+  // 카드의 [설명 복사] 는 data-copy-for 로 그 쇼츠 카드를 찾는다
   function cardById(id) {
     var all = id ? document.querySelectorAll(".item[data-id]") : [];
     for (var i = 0; i < all.length; i++) {
@@ -2200,16 +2210,17 @@ body.has-next main { padding-bottom: 104px; }
   }
 
   document.addEventListener("click", function (event) {
-    var el = event.target.closest ? event.target.closest("[data-copy]") : null;
-    var card = el && (el.closest(".item") || cardById(el.getAttribute("data-for")));
+    var el = event.target.closest ? event.target.closest("[data-copy-for]") : null;
+    var card = el && cardById(el.getAttribute("data-copy-for"));
+    var link = card && card.querySelector("a[data-copy]");
     var box = card && card.querySelector(".note");
-    var line = el && el.getAttribute("data-copy");
-    var text = line && window.makeReport ? window.makeReport(el.getAttribute("data-kind"), line) : line;
+    var line = link && link.getAttribute("data-copy");
+    var text = line && window.makeReport ? window.makeReport(link.getAttribute("data-kind"), line) : line;
     if (!box || !text) return;
-    var reason = el.getAttribute("data-reason");
+    var reason = link.getAttribute("data-reason");
     var message = "설명을 복사했어요 · ⋮ → 신고 → " + (reason ? "'" + reason + "'" : "맞는 사유") + " 고르고 붙여넣기" +
       " · 끝나면 ⋮ → ‘채널 추천 안함’";
-    copyText(text, function (ok) { show(box, ok, ok ? message : FAIL, text); });
+    window.copyInto(box, text, message);
   });
 
   // 제보 보내기: 같은 페이지가 다른 주소(사본)에서도 열리므로 받는 곳은 늘 이 주소 하나. form 꼴(머리글 없음 - 미리 묻는
@@ -2429,8 +2440,17 @@ body.has-next main { padding-bottom: 104px; }
   var bundleGo = make("a", "go");
   bundleGo.setAttribute("rel", "noopener noreferrer");
   bundle.appendChild(bundleGo);
+  var bundleCopied = make("div", "note");
+  bundleCopied.setAttribute("role", "status");
+  bundleCopied.hidden = true;
+  // 줄줄이 신고 때 쇼츠마다 붙일 글 하나 - [신고목록 열기] 는 열기만 하고, 복사는 이 단추를 누를 때만 (사용자 11-15)
+  bundle.appendChild(button("설명 복사", function () {
+    if (window.copyInto && window.makeReport) {
+      window.copyInto(bundleCopied, window.makeReport("mock", ""), "설명을 복사했어요 · 쇼츠마다 설명 칸에 붙여 넣어요");
+    }
+  }, "copy-btn"));
+  bundle.appendChild(bundleCopied);
   var bundleAsk = make("div", "bundle-ask");
-  var bundleNote = make("p", "sub");
   var askLine = make("p", "ask");
   askLine.appendChild(make("span", "", "유튜브에서 다 신고했나요?"));
   askLine.appendChild(button("다 했어요", function () { finishBundle(asked.length); }));
@@ -2467,7 +2487,6 @@ body.has-next main { padding-bottom: 104px; }
     }
     finishBundle(n);
   }
-  bundleAsk.appendChild(bundleNote);
   bundleAsk.appendChild(askLine);
   bundleAsk.appendChild(upto);
   bundle.appendChild(bundleAsk);
@@ -2513,12 +2532,6 @@ body.has-next main { padding-bottom: 104px; }
     asked = (bundleGo.getAttribute("data-ids") || "").split(",").filter(Boolean);
     save(BUNDLE_KEY, JSON.stringify(asked));
     upto.hidden = true;
-    bundleNote.textContent = "";
-    try {
-      navigator.clipboard.writeText(window.makeReport ? window.makeReport("mock", "") : "").then(function () {
-        bundleNote.textContent = "신고 설명을 복사해 뒀어요 · 쇼츠마다 설명 칸에 붙여 넣어요";
-      }, function () {});
-    } catch (e) { /* 복사가 안 돼도 열기는 그대로 */ }
     bundleAsk.hidden = false;
   }
   var bar = make("div", "next-bar");
@@ -2542,9 +2555,16 @@ body.has-next main { padding-bottom: 104px; }
   }
   function paint(card, on) {
     card.classList.toggle("mine", on);
-    var acts = card.querySelector(".acts");      // 신고한 카드는 [신고하러 가기] · [신고 완료] 를 감춘다 - 링크를 다시 안 열게
-    if (acts && on) setTimeout(function () { if (card.classList.contains("mine")) acts.hidden = true; }, 0);   // 누른 링크가 열린 뒤에
-    if (acts && !on) acts.hidden = false;
+    // 신고한 카드는 [신고하러 가기] · [신고 완료] 를 감춘다 - 링크를 다시 안 열게. [설명 복사] 는 남긴다 - 쇼츠를 먼저 열고
+    // 돌아와서 복사할 수 있게 (사용자 11-15). '신고 완료' 탭에서는 단추 칸을 통째로 감춘다 (refresh).
+    var hide = [linkOf(card), card.querySelector(".done-btn")].filter(Boolean);
+    if (on) {
+      setTimeout(function () {                     // 누른 링크가 열린 뒤에
+        if (card.classList.contains("mine")) hide.forEach(function (e) { e.hidden = true; });
+      }, 0);
+    } else {
+      hide.forEach(function (e) { e.hidden = false; });
+    }
     var row = card.querySelector(".mine-row");
     if (on && !row) {
       row = make("p", "mine-row");
@@ -2569,6 +2589,8 @@ body.has-next main { padding-bottom: 104px; }
     cards.forEach(function (card) {
       var id = idOf(card), isDone = Boolean(done[id]);
       card.hidden = todo ? (isDone && !fresh[id]) : (tab === "done" ? !isDone : true);
+      var acts = card.querySelector(".acts");
+      if (acts) acts.hidden = !todo;               // '신고 완료' 탭: 링크도 [설명 복사] 도 없이
     });
     if (leftCount) leftCount.textContent = String(left.length);
     count("todo", left.length);
@@ -2618,13 +2640,31 @@ body.has-next main { padding-bottom: 104px; }
     openText.textContent = "신고 링크를 여는 곳: " + (how === "app" ? "유튜브 앱" : "브라우저") + " · ";
     refresh();
   }
-  function opened(card) {
+  // 연 쇼츠 카드의 안내 - 여는 것은 복사하지 않으니 [설명 복사] 를 알려 준다 (사용자 11-15). 먼저 [설명 복사] 를 눌렀으면
+  // 그 안내(복사했어요 · 복사가 막혔을 때의 글 상자)를 그대로 둔다.
+  function guide(card) {
+    var box = card.querySelector(".note");
+    if (!box || !box.hidden) return;
+    var reason = linkOf(card).getAttribute("data-reason");
+    box.textContent = "";
+    box.className = "note";
+    box.appendChild(make("p", "", "⋮ → 신고 → " + (reason ? "'" + reason + "'" : "맞는 사유") + " 고르기" +
+      " · 설명을 붙이려면 ‘설명 복사’ · 끝나면 ⋮ → ‘채널 추천 안함’"));
+    box.hidden = false;
+  }
+  function opened(card, fromBar) {
     started = true;
     fresh[idOf(card)] = true;
     done[idOf(card)] = Date.now();
     saveDone();
     paint(card, true);
-    setTimeout(refresh, 0);                        // 누른 링크가 열린 뒤에 [다음 쇼츠] 주소를 바꾼다
+    guide(card);
+    setTimeout(function () {                       // 누른 링크가 열린 뒤에 [다음 쇼츠] 주소를 바꾼다
+      refresh();
+      // [다음 쇼츠] 로 연 쇼츠는 그 카드를 화면 가운데로 - 돌아와서 그 카드의 [설명 복사] 를 바로 누르게 (사용자 11-15).
+      // 아래 줄에는 복사 단추를 두지 않는다 - 누르면 다음 쇼츠로 바뀌어서 어느 쇼츠의 설명인지 헷갈린다.
+      if (fromBar && card.scrollIntoView) card.scrollIntoView({ block: "center" });
+    }, 0);
   }
 
   // 휴대폰에서 처음 누를 때 어디서 열지 묻는 창
@@ -2633,8 +2673,8 @@ body.has-next main { padding-bottom: 104px; }
     if (sheet) sheet.hidden = true;
     pending = null;
   }
-  function ask(card) {
-    askFor(appUrl(home(card)), webUrl(home(card)), function () { opened(card); });
+  function ask(card, fromBar) {
+    askFor(appUrl(home(card)), webUrl(home(card)), function () { opened(card, fromBar); });
   }
   // 앱 / 브라우저 고르기 창 - 쇼츠 카드와 재생목록 버튼이 같이 쓴다. then = 고른 뒤 할 일 (그 링크가 열리는 동안)
   function askFor(appHref, webHref, then) {
@@ -2688,16 +2728,21 @@ body.has-next main { padding-bottom: 104px; }
     var id = a.getAttribute("data-for") || (host ? idOf(host) : "");
     var card = cards.filter(function (c) { return idOf(c) === id; })[0];
     if (!card) return;
+    var fromBar = a === next;
     if (os && !how) {                              // 휴대폰에서 처음: 바로 열지 않고 어디서 열지 묻는다
       event.preventDefault();
-      ask(card);
+      ask(card, fromBar);
       return;
     }
-    opened(card);
+    opened(card, fromBar);
   });
 
   cards.forEach(function (card) {
-    var acts = linkOf(card).parentNode;
+    var link = linkOf(card), acts = link.parentNode;
+    var copy = make("button", "copy-btn", "설명 복사");   // 클립보드에는 이것을 누를 때만 (사용자 11-15) - 복사는 위 스크립트
+    copy.type = "button";
+    copy.setAttribute("data-copy-for", idOf(card));
+    acts.insertBefore(copy, link.nextSibling);
     acts.appendChild(button("신고 완료", function () { markDone(card); }, "done-btn"));
     if (done[idOf(card)]) paint(card, true);
   });
